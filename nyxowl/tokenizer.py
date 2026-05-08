@@ -70,10 +70,25 @@ class BPETokenizer:
     # ------------------------------------------------------------------
 
     def encode(self, text: str) -> list[int]:
-        """Encode *text* to a list of token ids."""
+        """Encode *text* to a list of token ids.
+
+        For long inputs we chunk by lines first — each encode pass is O(n * m)
+        where n is sequence length and m is the number of applicable merges,
+        so keeping per-call sequences short dramatically cuts wall time on
+        big corpora. Line breaks rarely sit inside meaningful merges, so the
+        resulting token sequence is effectively identical.
+        """
         if not self._trained:
             raise RuntimeError("Call train() or load() before encoding.")
 
+        if len(text) > 4096:
+            out: list[int] = []
+            for line in text.splitlines(keepends=True):
+                out.extend(self._encode_chunk(line))
+            return out
+        return self._encode_chunk(text)
+
+    def _encode_chunk(self, text: str) -> list[int]:
         ids: list[int] = list(text.encode("utf-8"))
 
         # Greedily apply the highest-priority (earliest) eligible merge.
