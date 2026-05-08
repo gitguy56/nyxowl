@@ -40,6 +40,22 @@ class Trainer:
             betas=(0.9, 0.95),
         )
 
+        # Mixed-precision setup. On modern NVIDIA GPUs (Ampere / Ada / Blackwell)
+        # bf16 has fp32-like dynamic range, so no GradScaler is needed.
+        self.use_amp = self.device.type == "cuda"
+        if self.use_amp and torch.cuda.is_bf16_supported():
+            self.amp_dtype: torch.dtype = torch.bfloat16
+        else:
+            self.amp_dtype = torch.float16
+        self.scaler = torch.amp.GradScaler(
+            "cuda",
+            enabled=(self.use_amp and self.amp_dtype == torch.float16),
+        )
+
+        # Faster matmul on Ampere+ GPUs: use TF32 for fp32 ops.
+        if self.device.type == "cuda":
+            torch.set_float32_matmul_precision("high")
+
     # ------------------------------------------------------------------
     # Learning-rate schedule
     # ------------------------------------------------------------------
@@ -75,8 +91,13 @@ class Trainer:
         for x, y in loader:
             if count >= max_batches:
                 break
-            x, y = x.to(self.device), y.to(self.device)
-            _, loss = self.model(x, y)
+            x, y = x.to(self.device, non_blocking=True), y.to(self.device, non_blocking=True)
+            with torch.amp.autocast(
+                device_type=self.device.type,
+                dtype=self.amp_dtype,
+                enabled=self.use_amp,
+            ):
+                _, loss = self.model(x, y)
             total += loss.item()
             count += 1
         self.model.train()
@@ -99,9 +120,12 @@ class Trainer:
         t0 = time.perf_counter()
 
         n_params = self.model.num_parameters()
+        amp_label = (
+            f"amp={str(self.amp_dtype).split('.')[-1]}" if self.use_amp else "amp=off"
+        )
         print(
             f"NyxOwl | {n_params:,} parameters | device: {self.device} | "
-            f"steps: {cfg.max_steps} | batch: {cfg.batch_size}"
+            f"steps: {cfg.max_steps} | batch: {cfg.batch_size} | {amp_label}"
         )
 
         for step in range(cfg.max_steps):
@@ -113,16 +137,27 @@ class Trainer:
                 train_iter = iter(train_loader)
                 x, y = next(train_iter)
 
-            x, y = x.to(self.device), y.to(self.device)
+            x = x.to(self.device, non_blocking=True)
+            y = y.to(self.device, non_blocking=True)
 
             self.optimizer.zero_grad(set_to_none=True)
-            _, loss = self.model(x, y)
-            loss.backward()
+
+            with torch.amp.autocast(
+                device_type=self.device.type,
+                dtype=self.amp_dtype,
+                enabled=self.use_amp,
+            ):
+                _, loss = self.model(x, y)
+
+            self.scaler.scale(loss).backward()
 
             if cfg.grad_clip > 0.0:
+                if self.scaler.is_enabled():
+                    self.scaler.unscale_(self.optimizer)
                 nn.utils.clip_grad_norm_(self.model.parameters(), cfg.grad_clip)
 
-            self.optimizer.step()
+            self.scaler.step(self.optimizer)
+            self.scaler.update()
             self.step = step
 
             if (step + 1) % cfg.eval_interval == 0 or step == 0:

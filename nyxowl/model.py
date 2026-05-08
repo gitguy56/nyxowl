@@ -10,48 +10,63 @@ from .config import ModelConfig
 
 
 class MultiHeadAttention(nn.Module):
-    """Causal multi-head self-attention."""
+    """Causal multi-head self-attention.
+
+    Uses ``F.scaled_dot_product_attention`` when available — PyTorch will
+    automatically dispatch to Flash Attention or memory-efficient kernels on
+    Ampere+ GPUs, which is roughly 2-5x faster than the explicit math path.
+    """
 
     def __init__(self, config: ModelConfig) -> None:
         super().__init__()
         self.n_heads = config.n_heads
         self.d_head = config.d_model // config.n_heads
         self.d_model = config.d_model
-        self.scale = math.sqrt(self.d_head)
+        self.dropout_p = config.dropout
 
-        # Fused QKV projection — one matmul instead of three.
         self.qkv_proj = nn.Linear(config.d_model, 3 * config.d_model, bias=False)
         self.out_proj = nn.Linear(config.d_model, config.d_model, bias=False)
-        self.attn_dropout = nn.Dropout(config.dropout)
         self.resid_dropout = nn.Dropout(config.dropout)
 
-        # Lower-triangular causal mask (not a parameter).
-        self.register_buffer(
-            "causal_mask",
-            torch.tril(torch.ones(config.max_seq_len, config.max_seq_len, dtype=torch.bool)),
-            persistent=False,
-        )
+        self._use_sdpa = hasattr(F, "scaled_dot_product_attention")
+
+        if not self._use_sdpa:
+            # Fallback: manual attention with explicit causal mask.
+            self.scale = math.sqrt(self.d_head)
+            self.attn_dropout = nn.Dropout(config.dropout)
+            self.register_buffer(
+                "causal_mask",
+                torch.tril(
+                    torch.ones(config.max_seq_len, config.max_seq_len, dtype=torch.bool)
+                ),
+                persistent=False,
+            )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         B, T, C = x.shape
 
-        qkv = self.qkv_proj(x)                                   # (B, T, 3C)
-        q, k, v = qkv.split(self.d_model, dim=-1)                # each (B, T, C)
+        qkv = self.qkv_proj(x)
+        q, k, v = qkv.split(self.d_model, dim=-1)
 
-        # Reshape to (B, n_heads, T, d_head)
         def _split_heads(t: torch.Tensor) -> torch.Tensor:
             return t.view(B, T, self.n_heads, self.d_head).transpose(1, 2)
 
         q, k, v = _split_heads(q), _split_heads(k), _split_heads(v)
 
-        # Scaled dot-product attention
-        attn = (q @ k.transpose(-2, -1)) / self.scale            # (B, H, T, T)
-        attn = attn.masked_fill(~self.causal_mask[:T, :T], float("-inf"))
-        attn = F.softmax(attn, dim=-1)
-        attn = self.attn_dropout(attn)
+        if self._use_sdpa:
+            out = F.scaled_dot_product_attention(
+                q, k, v,
+                is_causal=True,
+                dropout_p=self.dropout_p if self.training else 0.0,
+            )
+        else:
+            attn = (q @ k.transpose(-2, -1)) / self.scale
+            attn = attn.masked_fill(~self.causal_mask[:T, :T], float("-inf"))
+            attn = F.softmax(attn, dim=-1)
+            attn = self.attn_dropout(attn)
+            out = attn @ v
 
-        out = attn @ v                                            # (B, H, T, d_head)
-        out = out.transpose(1, 2).contiguous().view(B, T, C)     # (B, T, C)
+        out = out.transpose(1, 2).contiguous().view(B, T, C)
         return self.resid_dropout(self.out_proj(out))
 
 

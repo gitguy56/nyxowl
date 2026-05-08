@@ -2,6 +2,7 @@
 
 import base64
 import json
+from collections import Counter
 from pathlib import Path
 
 
@@ -30,31 +31,59 @@ class BPETokenizer:
     # ------------------------------------------------------------------
 
     def train(self, text: str, vocab_size: int, verbose: bool = False) -> None:
-        """Train BPE merges on *text* until *vocab_size* is reached."""
+        """Train BPE merges on *text* until *vocab_size* is reached.
+
+        Optimisations vs. a naive single-stream implementation:
+        - Pre-split into lines and deduplicate. Each unique line is stored
+          once with a frequency count, so repeated boilerplate (story
+          openings, headers, etc.) is processed in O(1) instead of O(N).
+        - Pair counts are weighted by line frequency.
+        - Each merge step rewrites only the unique line list, not the
+          whole corpus.
+
+        For typical natural-language corpora this is one to two orders of
+        magnitude faster than the streaming version.
+        """
         if vocab_size < 256:
             raise ValueError("vocab_size must be >= 256 (byte alphabet)")
 
-        # Byte-level base vocabulary.
         self.vocab = {i: bytes([i]) for i in range(256)}
         self.merges = {}
 
-        ids: list[int] = list(text.encode("utf-8"))
+        # Split into lines (newlines preserved) and dedupe.
+        lines = text.splitlines(keepends=True) or [text]
+        line_counts: Counter[str] = Counter(lines)
+
+        # Each unique line becomes a mutable list of token ids.
+        line_ids: dict[str, list[int]] = {
+            line: list(line.encode("utf-8")) for line in line_counts
+        }
+
         num_merges = vocab_size - 256
 
         for step in range(num_merges):
-            counts: dict[tuple[int, int], int] = {}
-            for a, b in zip(ids, ids[1:]):
-                counts[(a, b)] = counts.get((a, b), 0) + 1
+            # Weighted pair counts across unique lines.
+            pair_counts: Counter[tuple[int, int]] = Counter()
+            for line, ids in line_ids.items():
+                weight = line_counts[line]
+                if len(ids) < 2:
+                    continue
+                for pair in zip(ids, ids[1:]):
+                    pair_counts[pair] += weight
 
-            if not counts:
+            if not pair_counts:
                 break
 
-            best_pair = max(counts, key=counts.__getitem__)
+            best_pair, _ = pair_counts.most_common(1)[0]
             new_id = 256 + step
 
             self.merges[best_pair] = new_id
             self.vocab[new_id] = self.vocab[best_pair[0]] + self.vocab[best_pair[1]]
-            ids = self._apply_merge(ids, best_pair, new_id)
+
+            # Apply the merge to every unique line in place.
+            for line, ids in line_ids.items():
+                if len(ids) >= 2:
+                    line_ids[line] = self._apply_merge(ids, best_pair, new_id)
 
             if verbose and (step + 1) % 500 == 0:
                 pct = 100.0 * (step + 1) / num_merges
