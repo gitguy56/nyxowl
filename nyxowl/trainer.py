@@ -128,28 +128,34 @@ class Trainer:
             f"steps: {cfg.max_steps} | batch: {cfg.batch_size} | {amp_label}"
         )
 
+        accum = max(1, cfg.grad_accum_steps)
         for step in range(cfg.max_steps):
             lr = self._apply_lr(step)
-
-            try:
-                x, y = next(train_iter)
-            except StopIteration:
-                train_iter = iter(train_loader)
-                x, y = next(train_iter)
-
-            x = x.to(self.device, non_blocking=True)
-            y = y.to(self.device, non_blocking=True)
-
             self.optimizer.zero_grad(set_to_none=True)
 
-            with torch.amp.autocast(
-                device_type=self.device.type,
-                dtype=self.amp_dtype,
-                enabled=self.use_amp,
-            ):
-                _, loss = self.model(x, y)
+            # Gradient accumulation: sum gradients over `accum` micro-batches
+            # before stepping. Effective batch = batch_size * grad_accum_steps.
+            running_loss = 0.0
+            for _ in range(accum):
+                try:
+                    x, y = next(train_iter)
+                except StopIteration:
+                    train_iter = iter(train_loader)
+                    x, y = next(train_iter)
 
-            self.scaler.scale(loss).backward()
+                x = x.to(self.device, non_blocking=True)
+                y = y.to(self.device, non_blocking=True)
+
+                with torch.amp.autocast(
+                    device_type=self.device.type,
+                    dtype=self.amp_dtype,
+                    enabled=self.use_amp,
+                ):
+                    _, loss = self.model(x, y)
+
+                loss = loss / accum
+                self.scaler.scale(loss).backward()
+                running_loss += loss.item()
 
             if cfg.grad_clip > 0.0:
                 if self.scaler.is_enabled():
@@ -159,6 +165,7 @@ class Trainer:
             self.scaler.step(self.optimizer)
             self.scaler.update()
             self.step = step
+            loss_value = running_loss
 
             if (step + 1) % cfg.eval_interval == 0 or step == 0:
                 elapsed = time.perf_counter() - t0
@@ -167,10 +174,11 @@ class Trainer:
                 )
                 print(
                     f"step {step + 1:5d}/{cfg.max_steps} | "
-                    f"train {loss.item():.4f} | "
+                    f"train {loss_value:.4f} | "
                     f"val {val_loss:.4f} | "
                     f"lr {lr:.2e} | "
-                    f"{elapsed:.1f}s"
+                    f"{elapsed:.1f}s",
+                    flush=True,
                 )
                 t0 = time.perf_counter()
 

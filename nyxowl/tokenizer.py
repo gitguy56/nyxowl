@@ -15,16 +15,44 @@ class BPETokenizer:
     small corpora; swap for a Rust-backed tokenizer for large-scale work.
     """
 
+    # Default special tokens reserved for chat formatting. They never collide
+    # with byte values (0-255) or trained merges; we splice them in above the
+    # learned vocab during save/load.
+    DEFAULT_SPECIAL_TOKENS: tuple[str, ...] = (
+        "<|pad|>",
+        "<|bos|>",
+        "<|eos|>",
+        "<|sys|>",
+        "<|user|>",
+        "<|nyx|>",
+        "<|end|>",
+    )
+
     def __init__(self) -> None:
         # Maps (id_a, id_b) -> new_id in insertion order (= merge priority).
         self.merges: dict[tuple[int, int], int] = {}
-        # Maps token id -> raw bytes.
+        # Maps token id -> raw bytes (or UTF-8 form for special tokens).
         self.vocab: dict[int, bytes] = {}
+        # Maps special-token literal string (e.g. "<|user|>") -> token id.
+        self.special_tokens: dict[str, int] = {}
         self._trained: bool = False
 
     @property
     def vocab_size(self) -> int:
-        return len(self.vocab)
+        return len(self.vocab) + len(self.special_tokens)
+
+    # ------------------------------------------------------------------
+    # Special tokens
+    # ------------------------------------------------------------------
+
+    def add_special_tokens(self, tokens: list[str] | tuple[str, ...]) -> None:
+        """Reserve token ids for non-mergeable literal strings (e.g. <|sys|>)."""
+        next_id = len(self.vocab) + len(self.special_tokens)
+        for tok in tokens:
+            if tok in self.special_tokens:
+                continue
+            self.special_tokens[tok] = next_id
+            next_id += 1
 
     # ------------------------------------------------------------------
     # Training
@@ -98,9 +126,11 @@ class BPETokenizer:
     # Encoding / decoding
     # ------------------------------------------------------------------
 
-    def encode(self, text: str) -> list[int]:
+    def encode(self, text: str, allow_special: bool = True) -> list[int]:
         """Encode *text* to a list of token ids.
 
+        Special tokens (e.g. ``<|sys|>``) are matched literally when
+        ``allow_special`` is True and emitted as their reserved ids.
         For long inputs we chunk by lines first — each encode pass is O(n * m)
         where n is sequence length and m is the number of applicable merges,
         so keeping per-call sequences short dramatically cuts wall time on
@@ -110,12 +140,57 @@ class BPETokenizer:
         if not self._trained:
             raise RuntimeError("Call train() or load() before encoding.")
 
-        if len(text) > 4096:
-            out: list[int] = []
-            for line in text.splitlines(keepends=True):
-                out.extend(self._encode_chunk(line))
-            return out
-        return self._encode_chunk(text)
+        # Split out special tokens (if any) before BPE so they survive verbatim.
+        if allow_special and self.special_tokens:
+            segments = self._split_special(text)
+        else:
+            segments = [(text, False)]
+
+        out: list[int] = []
+        for segment, is_special in segments:
+            if is_special:
+                out.append(self.special_tokens[segment])
+                continue
+            if len(segment) > 4096:
+                for line in segment.splitlines(keepends=True):
+                    out.extend(self._encode_chunk(line))
+            else:
+                out.extend(self._encode_chunk(segment))
+        return out
+
+    def _split_special(self, text: str) -> list[tuple[str, bool]]:
+        """Split text on every literal special-token occurrence."""
+        if not self.special_tokens:
+            return [(text, False)]
+        # Sort by length desc so longer specials match before any prefix subset.
+        specials = sorted(self.special_tokens, key=len, reverse=True)
+        parts: list[tuple[str, bool]] = []
+        i = 0
+        n = len(text)
+        while i < n:
+            match: str | None = None
+            for sp in specials:
+                if text.startswith(sp, i):
+                    match = sp
+                    break
+            if match is not None:
+                parts.append((match, True))
+                i += len(match)
+            else:
+                # Scan ahead until the next special token start.
+                j = i + 1
+                while j < n:
+                    hit = False
+                    for sp in specials:
+                        if text.startswith(sp, j):
+                            hit = True
+                            break
+                    if hit:
+                        break
+                    j += 1
+                parts.append((text[i:j], False))
+                i = j
+        return parts
 
     def _encode_chunk(self, text: str) -> list[int]:
         ids: list[int] = list(text.encode("utf-8"))
@@ -140,9 +215,23 @@ class BPETokenizer:
         return ids
 
     def decode(self, ids: list[int]) -> str:
-        """Decode a list of token ids back to a string."""
-        raw = b"".join(self.vocab.get(i, b"\xef\xbf\xbd") for i in ids)
-        return raw.decode("utf-8", errors="replace")
+        """Decode a list of token ids back to a string.
+
+        Special tokens are emitted as their literal form (``<|sys|>`` etc.)
+        so a chat REPL can split on them.
+        """
+        if self.special_tokens:
+            inv_special = {tid: tok for tok, tid in self.special_tokens.items()}
+        else:
+            inv_special = {}
+
+        out_pieces: list[bytes] = []
+        for i in ids:
+            if i in inv_special:
+                out_pieces.append(inv_special[i].encode("utf-8"))
+            else:
+                out_pieces.append(self.vocab.get(i, b"\xef\xbf\xbd"))
+        return b"".join(out_pieces).decode("utf-8", errors="replace")
 
     # ------------------------------------------------------------------
     # Serialisation
@@ -158,6 +247,7 @@ class BPETokenizer:
                 str(k): base64.b64encode(v).decode("ascii")
                 for k, v in self.vocab.items()
             },
+            "special_tokens": self.special_tokens,
         }
         p.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
@@ -169,6 +259,9 @@ class BPETokenizer:
         tok.merges = {(a, b): nid for a, b, nid in data["merges"]}
         tok.vocab = {
             int(k): base64.b64decode(v) for k, v in data["vocab"].items()
+        }
+        tok.special_tokens = {
+            k: int(v) for k, v in data.get("special_tokens", {}).items()
         }
         tok._trained = True
         return tok

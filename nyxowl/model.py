@@ -200,6 +200,8 @@ class NyxOwl(nn.Module):
         max_new_tokens: int,
         temperature: float = 1.0,
         top_k: int | None = None,
+        top_p: float | None = None,
+        stop_token_ids: list[int] | None = None,
     ) -> torch.Tensor:
         """
         Auto-regressively sample *max_new_tokens* tokens appended to *idx*.
@@ -209,23 +211,46 @@ class NyxOwl(nn.Module):
             max_new_tokens: number of new tokens to generate
             temperature:    softmax temperature (< 1 = sharper, > 1 = flatter)
             top_k:          if set, only sample from the top-k logits
+            top_p:          if set (0 < p <= 1), nucleus sampling — keep the
+                            smallest set of tokens whose cumulative probability
+                            mass exceeds p
+            stop_token_ids: stop generating once any of these token ids
+                            appears (only honoured when batch size == 1)
 
         Returns:
-            (B, T + max_new_tokens) token ids
+            (B, T + N) token ids, where N <= max_new_tokens.
         """
+        stop_set = set(stop_token_ids or [])
         for _ in range(max_new_tokens):
             idx_window = idx[:, -self.config.max_seq_len :]
             logits, _ = self(idx_window)
-            logits = logits[:, -1, :] / temperature       # (B, vocab_size)
+            logits = logits[:, -1, :] / max(temperature, 1e-6)  # (B, V)
 
             if top_k is not None:
                 k = min(top_k, logits.size(-1))
                 threshold, _ = torch.topk(logits, k)
                 logits[logits < threshold[:, [-1]]] = float("-inf")
 
+            if top_p is not None and 0.0 < top_p < 1.0:
+                sorted_logits, sorted_idx = torch.sort(logits, descending=True)
+                probs = F.softmax(sorted_logits, dim=-1)
+                cdf = torch.cumsum(probs, dim=-1)
+                # Mask out the tail past top_p (shifted so the boundary token stays).
+                cutoff = cdf > top_p
+                cutoff[..., 1:] = cutoff[..., :-1].clone()
+                cutoff[..., 0] = False
+                sorted_logits = sorted_logits.masked_fill(cutoff, float("-inf"))
+                logits = torch.full_like(logits, float("-inf")).scatter_(
+                    -1, sorted_idx, sorted_logits
+                )
+
             probs = F.softmax(logits, dim=-1)
             next_token = torch.multinomial(probs, num_samples=1)  # (B, 1)
             idx = torch.cat([idx, next_token], dim=1)
+
+            if stop_set and idx.size(0) == 1:
+                if int(next_token.item()) in stop_set:
+                    break
 
         return idx
 

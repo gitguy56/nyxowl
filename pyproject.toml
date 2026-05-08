@@ -23,6 +23,7 @@ classifiers = [
 ]
 dependencies = [
     "torch>=2.1.0",
+    "numpy>=1.24",
 ]
 
 [project.optional-dependencies]
@@ -34,6 +35,9 @@ dev = [
 [project.scripts]
 nyxowl-train = "nyxowl.scripts.train:main"
 nyxowl-generate = "nyxowl.scripts.generate:main"
+nyxowl-prep-data = "nyxowl.scripts.prep_data:main"
+nyxowl-synth-persona = "nyxowl.scripts.synth_persona:main"
+nyxowl-chat = "nyxowl.scripts.chat:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
