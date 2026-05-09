@@ -213,13 +213,18 @@ class Trainer:
     # Checkpoints
     # ------------------------------------------------------------------
 
+    def _raw_model(self) -> nn.Module:
+        # torch.compile wraps in OptimizedModule with attr `_orig_mod`.
+        return getattr(self.model, "_orig_mod", self.model)
+
     def _save(self, tag: int | str) -> None:
         path = Path(self.config.checkpoint_dir) / f"ckpt_{tag}.pt"
+        raw = self._raw_model()
         torch.save(
             {
                 "step": self.step,
-                "model_config": self.model.config,
-                "model_state": self.model.state_dict(),
+                "model_config": raw.config,
+                "model_state": raw.state_dict(),
                 "optimizer_state": self.optimizer.state_dict(),
             },
             path,
@@ -228,9 +233,12 @@ class Trainer:
 
     def load_checkpoint(self, path: str) -> None:
         ckpt = torch.load(path, map_location=self.device, weights_only=False)
-        # If the model was wrapped by torch.compile, load_state_dict still
-        # works because OptimizedModule forwards it to the underlying module.
-        self.model.load_state_dict(ckpt["model_state"])
+        state = ckpt["model_state"]
+        # Strip a `_orig_mod.` prefix in case the checkpoint was saved from a
+        # compiled wrapper. We always load into the raw (uncompiled) module.
+        if any(k.startswith("_orig_mod.") for k in state):
+            state = {k.removeprefix("_orig_mod."): v for k, v in state.items()}
+        self._raw_model().load_state_dict(state)
         self.optimizer.load_state_dict(ckpt["optimizer_state"])
         self.step = ckpt.get("step", 0)
         print(f"Loaded checkpoint '{path}' at step {self.step}")
