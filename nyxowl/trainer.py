@@ -227,7 +227,9 @@ class Trainer:
         print(f"  Saved → {path}")
 
     def load_checkpoint(self, path: str) -> None:
-        ckpt = torch.load(path, map_location=self.device)
+        ckpt = torch.load(path, map_location=self.device, weights_only=False)
+        # If the model was wrapped by torch.compile, load_state_dict still
+        # works because OptimizedModule forwards it to the underlying module.
         self.model.load_state_dict(ckpt["model_state"])
         self.optimizer.load_state_dict(ckpt["optimizer_state"])
         self.step = ckpt.get("step", 0)
