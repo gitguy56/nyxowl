@@ -42,6 +42,8 @@ class TrainConfig:
     save_interval: int = 1000   # save checkpoint every N steps
     checkpoint_dir: str = "checkpoints"
     device: str = "auto"        # "auto" | "cuda" | "mps" | "cpu"
+    use_compile: bool = True    # torch.compile the model on CUDA
+    num_workers: int = 2        # DataLoader workers (0 disables)
 
 
 # ---------------------------------------------------------------------

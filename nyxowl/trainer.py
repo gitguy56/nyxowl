@@ -33,12 +33,17 @@ class Trainer:
         self.device = _resolve_device(config.device)
 
         self.model = model.to(self.device)
-        self.optimizer = torch.optim.AdamW(
-            model.parameters(),
+
+        # Fused AdamW is meaningfully faster on CUDA — single kernel for the
+        # whole optimiser step instead of one per param tensor.
+        adamw_kwargs = dict(
             lr=config.learning_rate,
             weight_decay=config.weight_decay,
             betas=(0.9, 0.95),
         )
+        if self.device.type == "cuda":
+            adamw_kwargs["fused"] = True
+        self.optimizer = torch.optim.AdamW(model.parameters(), **adamw_kwargs)
 
         # Mixed-precision setup. On modern NVIDIA GPUs (Ampere / Ada / Blackwell)
         # bf16 has fp32-like dynamic range, so no GradScaler is needed.
@@ -52,9 +57,20 @@ class Trainer:
             enabled=(self.use_amp and self.amp_dtype == torch.float16),
         )
 
-        # Faster matmul on Ampere+ GPUs: use TF32 for fp32 ops.
         if self.device.type == "cuda":
+            # TF32 matmul + cuDNN autotuner pick the fastest kernel per shape.
             torch.set_float32_matmul_precision("high")
+            torch.backends.cudnn.benchmark = True
+
+            # torch.compile fuses the transformer graph and gives a sizeable
+            # speedup on Ada / Blackwell. Falls back silently if compile fails
+            # (e.g. unsupported Triton on Windows-old, missing C compiler).
+            if getattr(config, "use_compile", True):
+                try:
+                    self.model = torch.compile(self.model, mode="default")
+                    print("torch.compile: enabled (mode=default)")
+                except Exception as e:  # noqa: BLE001
+                    print(f"torch.compile: disabled ({e})")
 
     # ------------------------------------------------------------------
     # Learning-rate schedule

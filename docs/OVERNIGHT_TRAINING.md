@@ -67,7 +67,7 @@ books + WikiText-103). No HuggingFace account needed.
 python -m nyxowl.scripts.synth_persona --output data\persona.txt --count 10000
 ```
 
-### Step 4 — Train (overnight, ~10-12 hrs)
+### Step 4 — Train (overnight, ~6-8 hrs)
 
 ```cmd
 python -m nyxowl.scripts.train ^
@@ -76,8 +76,9 @@ python -m nyxowl.scripts.train ^
   --preset medium ^
   --vocab-size 16384 ^
   --with-chat-tokens ^
-  --batch-size 16 ^
-  --grad-accum-steps 4 ^
+  --batch-size 32 ^
+  --grad-accum-steps 1 ^
+  --num-workers 2 ^
   --max-steps 60000 ^
   --lr 3e-4 ^
   --warmup-steps 1000 ^
@@ -85,8 +86,20 @@ python -m nyxowl.scripts.train ^
   --save-interval 2000
 ```
 
-Effective batch size: 16 × 4 = 64. Save every 2000 steps so a crash costs
-at most ~20 minutes of progress.
+Effective batch size: 32. The 5070 Ti has 16 GB so you can fit the full
+batch directly without gradient accumulation — every "step" you see is a
+real optimiser step. If VRAM overflows, drop to `--batch-size 24` first
+before resorting to `--grad-accum-steps`.
+
+Speed knobs already on by default:
+- `torch.compile` (graph fusion, ~30 % faster). If it errors on first
+  step, add `--no-compile`.
+- Fused AdamW, cuDNN autotune, TF32 matmul, bf16 mixed precision,
+  Flash Attention.
+- Tokenised corpus is cached to `runs\nyxowl_medium\tokens_*.bin` after
+  the first run. Resuming or re-running skips encoding entirely.
+
+Save every 2000 steps so a crash costs at most ~20 minutes of progress.
 
 ### Step 5 — Persona fine-tune (optional, 30-90 min, run after morning coffee)
 

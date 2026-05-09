@@ -49,6 +49,17 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--eval-interval", type=int, default=200)
     p.add_argument("--save-interval", type=int, default=1000)
     p.add_argument("--device", default="auto", help="cuda | mps | cpu | auto")
+    p.add_argument(
+        "--no-compile",
+        action="store_true",
+        help="Disable torch.compile (use if compile fails on your system)",
+    )
+    p.add_argument(
+        "--num-workers",
+        type=int,
+        default=2,
+        help="DataLoader workers (0 to disable; raise for fast disks)",
+    )
 
     # Resume
     p.add_argument("--resume", default=None, help="Path to checkpoint to resume from")
@@ -136,8 +147,12 @@ def main(argv: list[str] | None = None) -> None:
     val_ds = MemmapTokenDataset(val_bin, seq_len)
     print(f"Train samples: {len(train_ds):,} | Val samples: {len(val_ds):,}")
 
-    train_loader = build_dataloader(train_ds, args.batch_size, shuffle=True)
-    val_loader = build_dataloader(val_ds, args.batch_size, shuffle=False)
+    train_loader = build_dataloader(
+        train_ds, args.batch_size, shuffle=True, num_workers=args.num_workers
+    )
+    val_loader = build_dataloader(
+        val_ds, args.batch_size, shuffle=False, num_workers=args.num_workers
+    )
 
     # ----------------------------------------------------------------- model
     if args.preset:
@@ -166,6 +181,8 @@ def main(argv: list[str] | None = None) -> None:
         save_interval=args.save_interval,
         checkpoint_dir=str(output_dir / "checkpoints"),
         device=args.device,
+        use_compile=not args.no_compile,
+        num_workers=args.num_workers,
     )
 
     trainer = Trainer(model, train_cfg)

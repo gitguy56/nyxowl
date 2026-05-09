@@ -62,16 +62,22 @@ def build_dataloader(
     dataset: TextDataset | "MemmapTokenDataset",
     batch_size: int,
     shuffle: bool = True,
-    num_workers: int = 0,
+    num_workers: int = 2,
 ) -> DataLoader:
-    return DataLoader(
-        dataset,
+    kwargs = dict(
+        dataset=dataset,
         batch_size=batch_size,
         shuffle=shuffle,
         drop_last=True,
         num_workers=num_workers,
         pin_memory=torch.cuda.is_available(),
     )
+    if num_workers > 0:
+        # Keep workers alive across epochs so we don't pay re-fork cost,
+        # and let them prefetch a couple of batches so the GPU never idles.
+        kwargs["persistent_workers"] = True
+        kwargs["prefetch_factor"] = 4
+    return DataLoader(**kwargs)
 
 
 # ----------------------------------------------------------------------
