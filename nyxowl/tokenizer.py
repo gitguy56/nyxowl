@@ -1,6 +1,7 @@
 """Byte-Pair Encoding tokenizer trained from scratch."""
 
 import base64
+import heapq
 import json
 from collections import Counter
 from pathlib import Path
@@ -194,25 +195,53 @@ class BPETokenizer:
 
     def _encode_chunk(self, text: str) -> list[int]:
         ids: list[int] = list(text.encode("utf-8"))
+        n = len(ids)
+        if n < 2:
+            return ids
 
-        # Greedily apply the highest-priority (earliest) eligible merge.
-        while len(ids) >= 2:
-            best_rank = float("inf")
-            best_pair: tuple[int, int] | None = None
+        # Doubly-linked list so neighbour lookups stay O(1) after merges.
+        nxt = list(range(1, n + 1))   # nxt[i] = next active index; n = sentinel
+        prv = list(range(-1, n - 1))  # prv[i] = prev active index; -1 = none
+        active = bytearray(b"\x01" * n)
 
-            for pair in zip(ids, ids[1:]):
-                rank = self.merges.get(pair)
-                if rank is not None and rank < best_rank:
-                    best_rank = rank
-                    best_pair = pair
+        # Priority queue: (rank, left_index). rank IS the new token id.
+        heap: list[tuple[int, int]] = []
+        for i in range(n - 1):
+            rank = self.merges.get((ids[i], ids[i + 1]))
+            if rank is not None:
+                heapq.heappush(heap, (rank, i))
 
-            if best_pair is None:
-                break
+        while heap:
+            rank, i = heapq.heappop(heap)
+            if not active[i]:
+                continue
+            j = nxt[i]
+            if j >= n or not active[j]:
+                continue
+            # Stale check: ids may have changed since this entry was pushed.
+            if self.merges.get((ids[i], ids[j])) != rank:
+                continue
 
-            # best_rank == new_id for this merge
-            ids = self._apply_merge(ids, best_pair, int(best_rank))
+            # Merge j into i.
+            ids[i] = rank
+            active[j] = 0
+            nxt[i] = nxt[j]
+            if nxt[j] < n:
+                prv[nxt[j]] = i
 
-        return ids
+            # Push candidate merges with the new token's neighbours.
+            pi = prv[i]
+            if pi >= 0:
+                r = self.merges.get((ids[pi], ids[i]))
+                if r is not None:
+                    heapq.heappush(heap, (r, pi))
+            ni = nxt[i]
+            if ni < n:
+                r = self.merges.get((ids[i], ids[ni]))
+                if r is not None:
+                    heapq.heappush(heap, (r, i))
+
+        return [ids[i] for i in range(n) if active[i]]
 
     def decode(self, ids: list[int]) -> str:
         """Decode a list of token ids back to a string.

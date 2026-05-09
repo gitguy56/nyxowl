@@ -169,6 +169,10 @@ class Trainer:
 
             if (step + 1) % cfg.eval_interval == 0 or step == 0:
                 elapsed = time.perf_counter() - t0
+                interval = cfg.eval_interval if step > 0 else 1
+                steps_per_sec = interval / max(elapsed, 1e-6)
+                eta_steps = cfg.max_steps - (step + 1)
+                eta_h = eta_steps / max(steps_per_sec * 3600, 1e-6)
                 val_loss = (
                     self.estimate_loss(val_loader) if val_loader else float("nan")
                 )
@@ -177,7 +181,8 @@ class Trainer:
                     f"train {loss_value:.4f} | "
                     f"val {val_loss:.4f} | "
                     f"lr {lr:.2e} | "
-                    f"{elapsed:.1f}s",
+                    f"{steps_per_sec:.2f} steps/s | "
+                    f"ETA {eta_h:.1f}h",
                     flush=True,
                 )
                 t0 = time.perf_counter()
