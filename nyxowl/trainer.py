@@ -62,13 +62,19 @@ class Trainer:
             torch.set_float32_matmul_precision("high")
             torch.backends.cudnn.benchmark = True
 
-            # torch.compile fuses the transformer graph and gives a sizeable
-            # speedup on Ada / Blackwell. Falls back silently if compile fails
-            # (e.g. unsupported Triton on Windows-old, missing C compiler).
+            # torch.compile needs Triton, which isn't always available on
+            # Windows (especially Python 3.14). Probe for it before enabling
+            # so we fail fast instead of crashing on the first forward pass.
             if getattr(config, "use_compile", True):
                 try:
+                    import triton  # noqa: F401
                     self.model = torch.compile(self.model, mode="default")
                     print("torch.compile: enabled (mode=default)")
+                except ImportError:
+                    print(
+                        "torch.compile: disabled (triton not installed). "
+                        "Install with `pip install triton-windows` for ~30%% speedup."
+                    )
                 except Exception as e:  # noqa: BLE001
                     print(f"torch.compile: disabled ({e})")
 
