@@ -417,7 +417,10 @@ textarea::placeholder{color:var(--dim)}
 </div>
 
 <!-- Clerk -->
-<script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js"></script>
+<script async crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_aW5mb3JtZWQtaHVza3ktNzYuY2xlcmsuYWNjb3VudHMuZGV2JA"
+  src="https://informed-husky-76.clerk.accounts.dev/npm/@clerk/clerk-js@5/dist/clerk.browser.js">
+</script>
 
 <script>
 // ── STARS ─────────────────────────────────────────────────────────────────
@@ -941,11 +944,11 @@ function resetAll(){
 // ── CLERK AUTH ─────────────────────────────────────────────────────────────
 window.addEventListener('load',async()=>{
   try{
-    window.clerk=new window.Clerk('pk_test_aW5mb3JtZWQtaHVza3ktNzYuY2xlcmsuYWNjb3VudHMuZGV2JA');
-    await window.clerk.load();
+    await Clerk.load();
+    window.clerk=Clerk;
     updateAuthUI();
-    window.clerk.addListener(()=>updateAuthUI());
-  }catch(e){console.error('Clerk init failed:',e);}
+    Clerk.addListener(()=>updateAuthUI());
+  }catch(e){console.error('Clerk:',e);}
 });
 
 function updateAuthUI(){
