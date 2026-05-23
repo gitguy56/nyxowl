@@ -17,7 +17,6 @@ html{scroll-behavior:smooth}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;font-size:16px;line-height:1.6}
 canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-/* ── LAYOUT ── */
 .wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 28px}
 
 /* ── NAV ── */
@@ -26,10 +25,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid var(
 .nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
 .nav-logo-text{font-size:1rem;font-weight:800;letter-spacing:-.01em;color:var(--text)}
 .nav-links{display:flex;align-items:center;gap:28px}
-.nav-links a{font-size:.82rem;color:var(--sub);text-decoration:none;transition:color .15s}
-.nav-links a:hover{color:var(--text)}
-.nav-cta{padding:7px 18px;background:var(--accent);border-radius:6px;color:#fff !important;font-weight:600;font-size:.8rem;box-shadow:0 0 20px rgba(80,110,255,.3);transition:all .2s !important}
-.nav-cta:hover{background:var(--accent2) !important;box-shadow:0 0 30px rgba(80,110,255,.5) !important}
+.nav-links>a{font-size:.82rem;color:var(--sub);text-decoration:none;transition:color .15s}
+.nav-links>a:hover{color:var(--text)}
+.nav-cta{padding:7px 18px;background:var(--accent);border-radius:6px;color:#fff !important;font-weight:600;font-size:.8rem;box-shadow:0 0 20px rgba(80,110,255,.3);transition:all .2s !important;text-decoration:none}
+.nav-cta:hover{background:var(--accent2) !important;box-shadow:0 0 30px rgba(80,110,255,.5) !important;transform:translateY(-1px) !important}
+.auth-nav-slot{display:flex;align-items:center;gap:10px}
 
 /* ── HERO ── */
 .hero{padding:160px 0 100px;text-align:center}
@@ -43,12 +43,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid var(
 .btn-primary{padding:13px 30px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-size:.9rem;font-weight:700;font-family:inherit;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;box-shadow:0 0 30px rgba(80,110,255,.35);transition:all .2s;letter-spacing:.02em}
 .btn-primary:hover{background:var(--accent2);box-shadow:0 0 44px rgba(80,110,255,.5);transform:translateY(-2px)}
 .btn-ghost{padding:12px 26px;background:transparent;border:1px solid var(--b1);border-radius:8px;color:var(--sub);font-size:.88rem;font-weight:600;font-family:inherit;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s}
-.btn-ghost:hover{border-color:var(--b2);color:var(--text)}
-.hero-note{margin-top:16px;font-size:.75rem;color:var(--dim)}
+.btn-ghost:hover{border-color:var(--b2);color:var(--text);transform:translateY(-1px)}
 
-/* ── DEMO PREVIEW ── */
+/* ── DEMO ── */
 .demo{padding:0 0 100px}
-.demo-window{border:1px solid var(--b1);border-radius:14px;overflow:hidden;max-width:780px;margin:0 auto;background:var(--s1)}
+.demo-window{border:1px solid var(--b1);border-radius:14px;overflow:hidden;max-width:780px;margin:0 auto;background:var(--s1);transition:box-shadow .3s}
+.demo-window:hover{box-shadow:0 0 60px rgba(80,110,255,.1)}
 .demo-bar{display:flex;align-items:center;gap:7px;padding:12px 16px;border-bottom:1px solid var(--b0);background:rgba(80,110,255,.03)}
 .demo-dot{width:10px;height:10px;border-radius:50%}
 .demo-url{flex:1;text-align:center;font-size:.7rem;color:var(--dim);letter-spacing:.04em}
@@ -63,7 +63,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid var(
 .demo-cell-bar{height:1px;background:var(--b0);overflow:hidden;margin-top:8px}
 .demo-cell-fill{height:100%;background:var(--accent);border-radius:1px}
 
-/* ── HOW IT WORKS ── */
+/* ── SECTIONS ── */
 .section{padding:80px 0}
 .section-label{font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);text-align:center;margin-bottom:12px}
 .section-title{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-.03em;text-align:center;color:var(--text);margin-bottom:14px}
@@ -71,25 +71,26 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid var(
 
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--b0);border:1px solid var(--b0);border-radius:12px;overflow:hidden}
 @media(max-width:640px){.steps{grid-template-columns:1fr}}
-.step{background:var(--s1);padding:32px 28px}
+.step{background:var(--s1);padding:32px 28px;transition:background .2s}
+.step:hover{background:var(--s2)}
 .step-num{font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
 .step h3{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-.01em}
 .step p{font-size:.85rem;color:var(--sub);line-height:1.65}
 
-/* ── PEAL BREAKDOWN ── */
 .peal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:800px;margin:0 auto}
 @media(max-width:640px){.peal-grid{grid-template-columns:1fr}}
-.peal-card{border:1px solid var(--b0);border-radius:10px;padding:24px;background:var(--s1)}
+.peal-card{border:1px solid var(--b0);border-radius:10px;padding:24px;background:var(--s1);transition:border-color .25s,box-shadow .25s,transform .25s}
+.peal-card:hover{border-color:var(--b1);box-shadow:0 0 30px rgba(80,110,255,.09);transform:translateY(-2px)}
 .peal-card-letter{font-size:2rem;font-weight:900;color:var(--accent2);margin-bottom:6px;letter-spacing:-.03em}
 .peal-card h3{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:8px}
 .peal-card p{font-size:.82rem;color:var(--sub);line-height:1.65}
 .peal-card-tip{margin-top:12px;padding:10px 12px;background:rgba(80,110,255,.06);border-radius:6px;font-size:.75rem;color:var(--sub);border-left:2px solid var(--accent)}
 .peal-card-tip strong{color:var(--accent2)}
 
-/* ── PRICING ── */
 .pricing{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:720px;margin:0 auto}
 @media(max-width:600px){.pricing{grid-template-columns:1fr}}
-.price-card{border:1px solid var(--b0);border-radius:12px;padding:28px;background:var(--s1)}
+.price-card{border:1px solid var(--b0);border-radius:12px;padding:28px;background:var(--s1);transition:border-color .25s,box-shadow .25s,transform .25s}
+.price-card:hover{transform:translateY(-3px);box-shadow:0 0 40px rgba(80,110,255,.1)}
 .price-card.featured{border-color:var(--accent);background:rgba(80,110,255,.06);position:relative;overflow:hidden}
 .price-card.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
 .price-badge{display:inline-block;background:var(--accent);color:#fff;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:16px}
@@ -105,11 +106,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid var(
 .pf-text.muted{color:var(--dim)}
 .btn-full{display:block;width:100%;padding:12px;border-radius:8px;font-size:.85rem;font-weight:700;font-family:inherit;cursor:pointer;text-align:center;text-decoration:none;transition:all .2s;letter-spacing:.02em}
 .btn-full.primary{background:var(--accent);border:none;color:#fff;box-shadow:0 0 24px rgba(80,110,255,.3)}
-.btn-full.primary:hover{background:var(--accent2);box-shadow:0 0 36px rgba(80,110,255,.5)}
+.btn-full.primary:hover{background:var(--accent2);box-shadow:0 0 36px rgba(80,110,255,.5);transform:translateY(-1px)}
 .btn-full.ghost{background:transparent;border:1px solid var(--b1);color:var(--sub)}
 .btn-full.ghost:hover{border-color:var(--b2);color:var(--text)}
 
-/* ── FOOTER ── */
 footer{border-top:1px solid var(--b0);padding:40px 0}
 .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
 .footer-logo{font-size:.85rem;font-weight:700;color:var(--sub)}
@@ -117,10 +117,65 @@ footer{border-top:1px solid var(--b0);padding:40px 0}
 .footer-links a{font-size:.75rem;color:var(--dim);text-decoration:none;transition:color .15s}
 .footer-links a:hover{color:var(--sub)}
 
-/* ── DIVIDER ── */
 .hr{display:flex;align-items:center;gap:16px;margin:0 0 80px;color:var(--dim)}
 .hr::before,.hr::after{content:'';flex:1;height:1px;background:var(--b0)}
 .hr-dot{width:4px;height:4px;border-radius:50%;background:var(--dim)}
+
+/* ── PAGE LOAD ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+nav{animation:slideDown .5s .05s cubic-bezier(.25,.8,.25,1) both}
+.hero-badge{animation:fadeUp .6s .1s cubic-bezier(.25,.8,.25,1) both}
+.hero h1{animation:fadeUp .65s .2s cubic-bezier(.25,.8,.25,1) both}
+.hero p{animation:fadeUp .6s .3s cubic-bezier(.25,.8,.25,1) both}
+.hero-btns{animation:fadeUp .6s .4s cubic-bezier(.25,.8,.25,1) both}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .65s cubic-bezier(.25,.8,.25,1),transform .65s cubic-bezier(.25,.8,.25,1)}
+.reveal.r-d1{transition-delay:.12s}
+.reveal.r-d2{transition-delay:.22s}
+.reveal.r-d3{transition-delay:.32s}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── AUTH MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(3,3,13,.88);backdrop-filter:blur(10px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:36px;width:100%;max-width:420px;margin:20px;position:relative;transform:translateY(18px) scale(.98);transition:transform .32s cubic-bezier(.22,.8,.44,1);box-shadow:0 24px 80px rgba(0,0,0,.5)}
+.modal-overlay.open .modal{transform:none}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--dim);font-size:.95rem;cursor:pointer;padding:6px 8px;line-height:1;transition:color .15s;border-radius:4px}
+.modal-close:hover{color:var(--text)}
+.modal-tabs{display:flex;gap:0;border-bottom:1px solid var(--b0);margin-bottom:26px}
+.modal-tab{flex:1;padding:10px;background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--dim);font-size:.76rem;font-weight:700;font-family:inherit;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;transition:all .18s}
+.modal-tab.active{color:var(--text);border-bottom-color:var(--accent)}
+.modal-form{display:none}
+.modal-form.active{display:block}
+.modal-heading{font-size:1.3rem;font-weight:800;letter-spacing:-.02em;color:var(--text);margin-bottom:5px}
+.modal-sub{font-size:.78rem;color:var(--sub);margin-bottom:22px;line-height:1.5}
+.form-group{margin-bottom:14px}
+.form-label{font-size:.63rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);display:block;margin-bottom:6px}
+.form-input{width:100%;background:rgba(80,110,255,.04);border:1px solid var(--b1);border-radius:7px;padding:11px 14px;color:var(--text);font-size:.87rem;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none}
+.form-input:focus{border-color:rgba(80,110,255,.42);box-shadow:0 0 0 3px rgba(80,110,255,.09)}
+.form-input::placeholder{color:var(--dim)}
+.form-err{font-size:.72rem;color:#ff7878;margin-top:6px;display:none;line-height:1.4}
+.form-err.show{display:block}
+.btn-auth{width:100%;padding:12px;background:var(--accent);border:none;border-radius:7px;color:#fff;font-size:.84rem;font-weight:700;font-family:inherit;cursor:pointer;margin-top:10px;transition:all .2s;letter-spacing:.03em;box-shadow:0 0 22px rgba(80,110,255,.28)}
+.btn-auth:hover{background:var(--accent2);box-shadow:0 0 34px rgba(80,110,255,.45);transform:translateY(-1px)}
+.modal-switch{text-align:center;margin-top:16px;font-size:.75rem;color:var(--sub)}
+.modal-switch a{color:var(--accent2);text-decoration:none;cursor:pointer}
+.modal-switch a:hover{text-decoration:underline}
+
+/* ── USER AVATAR ── */
+.btn-signin{padding:7px 16px;background:transparent;border:1px solid var(--b1);border-radius:6px;color:var(--sub);font-size:.79rem;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-signin:hover{border-color:var(--b2);color:var(--text)}
+.user-wrap{position:relative}
+.user-avatar{width:33px;height:33px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;color:#fff;cursor:pointer;transition:box-shadow .2s,transform .18s;flex-shrink:0;user-select:none}
+.user-avatar:hover{box-shadow:0 0 18px rgba(80,110,255,.55);transform:scale(1.06)}
+.user-dropdown{position:absolute;top:calc(100% + 10px);right:0;background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:6px;min-width:190px;z-index:200;opacity:0;pointer-events:none;transform:translateY(-8px) scale(.97);transition:all .2s cubic-bezier(.22,.8,.44,1);box-shadow:0 14px 44px rgba(0,0,0,.45)}
+.user-dropdown.open{opacity:1;pointer-events:all;transform:none}
+.ud-name{padding:10px 12px 4px;font-size:.83rem;font-weight:700;color:var(--text)}
+.ud-email{padding:0 12px 10px;font-size:.71rem;color:var(--sub);border-bottom:1px solid var(--b0);margin-bottom:4px;word-break:break-all}
+.ud-item{display:block;width:100%;padding:8px 12px;background:none;border:none;color:var(--sub);font-size:.79rem;font-family:inherit;cursor:pointer;border-radius:6px;text-align:left;transition:all .15s}
+.ud-item:hover{background:rgba(80,110,255,.08);color:var(--text)}
 
 @media(max-width:680px){
   .nav-links{gap:16px}
@@ -131,6 +186,55 @@ footer{border-top:1px solid var(--b0);padding:40px 0}
 </head>
 <body>
 <canvas id="cvs"></canvas>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+      <button class="modal-tab" id="tabLogin" onclick="switchTab('login')">Log In</button>
+    </div>
+    <div class="modal-form active" id="formSignup">
+      <div class="modal-heading">Create an account</div>
+      <div class="modal-sub">Free to start — track your progress over time.</div>
+      <div class="form-group">
+        <label class="form-label">Name</label>
+        <input class="form-input" id="su-name" type="text" placeholder="Your name" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" id="su-email" type="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" id="su-pass" type="password" placeholder="At least 6 characters">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <input class="form-input" id="su-pass2" type="password" placeholder="Repeat your password">
+        <div class="form-err" id="su-err"></div>
+      </div>
+      <button class="btn-auth" onclick="doSignup()">Create Account →</button>
+      <div class="modal-switch">Already have an account? <a onclick="switchTab('login')">Log in</a></div>
+    </div>
+    <div class="modal-form" id="formLogin">
+      <div class="modal-heading">Welcome back</div>
+      <div class="modal-sub">Log in to see your saved analyses and progress.</div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" id="li-email" type="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" id="li-pass" type="password" placeholder="Your password">
+        <div class="form-err" id="li-err"></div>
+      </div>
+      <button class="btn-auth" onclick="doLogin()">Log In →</button>
+      <div class="modal-switch">No account yet? <a onclick="switchTab('signup')">Sign up free</a></div>
+    </div>
+  </div>
+</div>
 
 <!-- NAV -->
 <nav>
@@ -153,7 +257,7 @@ footer{border-top:1px solid var(--b0);padding:40px 0}
     <div class="nav-links">
       <a href="#how">How it works</a>
       <a href="#pricing">Pricing</a>
-      <a href="peal-rater.html" class="nav-cta">Try free →</a>
+      <div class="auth-nav-slot" id="authNav"></div>
     </div>
   </div>
 </nav>
@@ -168,12 +272,11 @@ footer{border-top:1px solid var(--b0);padding:40px 0}
       <a href="peal-rater.html" class="btn-primary">Analyze my paragraph →</a>
       <a href="#how" class="btn-ghost">See how it works</a>
     </div>
-    <div class="hero-note">No sign up required to try · Used by students across the UK</div>
   </div>
 
   <!-- DEMO WINDOW -->
   <div class="demo">
-    <div class="demo-window">
+    <div class="demo-window reveal">
       <div class="demo-bar">
         <div class="demo-dot" style="background:#ff5f57"></div>
         <div class="demo-dot" style="background:#febc2e"></div>
@@ -195,21 +298,21 @@ footer{border-top:1px solid var(--b0);padding:40px 0}
 
   <!-- HOW IT WORKS -->
   <div class="section" id="how">
-    <div class="section-label">How it works</div>
-    <div class="section-title">Three steps to better writing</div>
-    <div class="section-sub">No guesswork. Get feedback as specific as a real examiner — based on your actual words.</div>
+    <div class="section-label reveal">How it works</div>
+    <div class="section-title reveal r-d1">Three steps to better writing</div>
+    <div class="section-sub reveal r-d2">No guesswork. Get feedback as specific as a real examiner — based on your actual words.</div>
     <div class="steps">
-      <div class="step">
+      <div class="step reveal">
         <div class="step-num">Step 01</div>
         <h3>Upload your source text</h3>
         <p>Paste the poem, passage or extract you're writing about. Or upload a photo of the page. PEAL Master reads it and bases all advice on that actual text.</p>
       </div>
-      <div class="step">
+      <div class="step reveal r-d1">
         <div class="step-num">Step 02</div>
         <h3>Submit your paragraph</h3>
         <p>Type or paste your PEAL paragraph. Upload a photo of handwritten work if you prefer. The tool identifies your Point, Evidence, Analysis and Link automatically.</p>
       </div>
-      <div class="step">
+      <div class="step reveal r-d2">
         <div class="step-num">Step 03</div>
         <h3>Get line-by-line feedback</h3>
         <p>Every weak sentence is shown alongside an improved version — built from your own words, not generic examples. See exactly what to change and why.</p>
@@ -221,29 +324,29 @@ footer{border-top:1px solid var(--b0);padding:40px 0}
 
   <!-- PEAL BREAKDOWN -->
   <div style="margin-bottom:80px">
-    <div class="section-label">What we score</div>
-    <div class="section-title">Every part of PEAL, assessed</div>
-    <div class="section-sub" style="margin-bottom:40px">Scoring mirrors real AQA, Edexcel and OCR mark schemes — the same criteria your teacher uses.</div>
+    <div class="section-label reveal">What we score</div>
+    <div class="section-title reveal r-d1">Every part of PEAL, assessed</div>
+    <div class="section-sub reveal r-d2" style="margin-bottom:40px">Scoring mirrors real AQA, Edexcel and OCR mark schemes — the same criteria your teacher uses.</div>
     <div class="peal-grid">
-      <div class="peal-card">
+      <div class="peal-card reveal">
         <div class="peal-card-letter">P</div>
         <h3>Point</h3>
         <p>Your opening claim. Scored on whether it names the author, uses a strong technique verb, includes a stance adverb, and identifies a theme — not just describes the text.</p>
         <div class="peal-card-tip"><strong>Example verb:</strong> Shakespeare <em>powerfully conveys</em> the theme of ambition…</div>
       </div>
-      <div class="peal-card">
+      <div class="peal-card reveal r-d1">
         <div class="peal-card-letter">E</div>
         <h3>Evidence</h3>
         <p>Your quote or data. Scored on whether it's embedded naturally, introduced with a signal phrase, and verified against your source text — not just dropped in standalone.</p>
         <div class="peal-card-tip"><strong>Example:</strong> As Shakespeare writes, <em>"look like the innocent flower."</em></div>
       </div>
-      <div class="peal-card">
+      <div class="peal-card reveal r-d2">
         <div class="peal-card-letter">A</div>
         <h3>Analysis</h3>
         <p>The most important part. Scored across seven criteria including "this suggests", technique zoom, connotation, reader effect, and whether you use tentative hedging language.</p>
         <div class="peal-card-tip"><strong>Key phrase:</strong> <em>This suggests</em> that the word "serpent" connotes…</div>
       </div>
-      <div class="peal-card">
+      <div class="peal-card reveal r-d3">
         <div class="peal-card-letter">L</div>
         <h3>Link</h3>
         <p>Your closing sentence. Scored on whether it uses a closing connective in final position, connects back to the argument, and references the author's wider purpose.</p>
@@ -256,11 +359,11 @@ footer{border-top:1px solid var(--b0);padding:40px 0}
 
   <!-- PRICING -->
   <div class="section" id="pricing">
-    <div class="section-label">Pricing</div>
-    <div class="section-title">Start free. Upgrade when ready.</div>
-    <div class="section-sub">No credit card needed to try. Premium unlocks unlimited analyses, saved history, and the full feedback engine.</div>
+    <div class="section-label reveal">Pricing</div>
+    <div class="section-title reveal r-d1">Start free. Upgrade when ready.</div>
+    <div class="section-sub reveal r-d2">No credit card needed to try. Premium unlocks unlimited analyses, saved history, and the full feedback engine.</div>
     <div class="pricing">
-      <div class="price-card">
+      <div class="price-card reveal">
         <div class="price-name">Free</div>
         <div class="price-amount">£0<span>/mo</span></div>
         <div class="price-period">Forever free</div>
@@ -275,7 +378,7 @@ footer{border-top:1px solid var(--b0);padding:40px 0}
         </ul>
         <a href="peal-rater.html" class="btn-full ghost">Start for free</a>
       </div>
-      <div class="price-card featured">
+      <div class="price-card featured reveal r-d1">
         <div class="price-badge">Most popular</div>
         <div class="price-name">Premium</div>
         <div class="price-amount">£4<span>/mo</span></div>
@@ -310,6 +413,7 @@ footer{border-top:1px solid var(--b0);padding:40px 0}
 </footer>
 
 <script>
+// ── STARS ─────────────────────────────────────────────────────────────────
 (()=>{
   const c=document.getElementById('cvs'),ctx=c.getContext('2d');let stars=[];
   const init=()=>{
@@ -339,6 +443,104 @@ footer{border-top:1px solid var(--b0);padding:40px 0}
   };
   init();draw();window.addEventListener('resize',init);
 })();
+
+// ── SCROLL REVEAL ─────────────────────────────────────────────────────────
+(()=>{
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+  },{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+})();
+
+// ── AUTH ──────────────────────────────────────────────────────────────────
+function getUsers(){try{return JSON.parse(localStorage.getItem('pm_users')||'[]');}catch{return[];}}
+function saveUsers(u){localStorage.setItem('pm_users',JSON.stringify(u));}
+function getSession(){try{return JSON.parse(localStorage.getItem('pm_session')||'null');}catch{return null;}}
+function setSession(u){localStorage.setItem('pm_session',JSON.stringify(u));}
+function clearSession(){localStorage.removeItem('pm_session');}
+
+function openModal(tab){
+  document.getElementById('authModal').classList.add('open');
+  switchTab(tab||'signup');
+}
+function closeModal(){document.getElementById('authModal').classList.remove('open');}
+function handleOverlayClick(e){if(e.target===e.currentTarget)closeModal();}
+
+function switchTab(tab){
+  const s=tab==='signup';
+  document.getElementById('tabSignup').classList.toggle('active',s);
+  document.getElementById('tabLogin').classList.toggle('active',!s);
+  document.getElementById('formSignup').classList.toggle('active',s);
+  document.getElementById('formLogin').classList.toggle('active',!s);
+}
+
+function doSignup(){
+  const name=document.getElementById('su-name').value.trim();
+  const email=document.getElementById('su-email').value.trim().toLowerCase();
+  const pass=document.getElementById('su-pass').value;
+  const pass2=document.getElementById('su-pass2').value;
+  const err=document.getElementById('su-err');
+  err.classList.remove('show');
+  if(!name||!email||!pass){err.textContent='Please fill in all fields.';err.classList.add('show');return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.textContent='Enter a valid email address.';err.classList.add('show');return;}
+  if(pass.length<6){err.textContent='Password must be at least 6 characters.';err.classList.add('show');return;}
+  if(pass!==pass2){err.textContent='Passwords do not match.';err.classList.add('show');return;}
+  const users=getUsers();
+  if(users.find(u=>u.email===email)){err.textContent='An account with this email already exists.';err.classList.add('show');return;}
+  const user={name,email,pass,createdAt:Date.now()};
+  users.push(user);saveUsers(users);
+  setSession({name,email,createdAt:user.createdAt});
+  closeModal();updateAuthUI();
+}
+
+function doLogin(){
+  const email=document.getElementById('li-email').value.trim().toLowerCase();
+  const pass=document.getElementById('li-pass').value;
+  const err=document.getElementById('li-err');
+  err.classList.remove('show');
+  if(!email||!pass){err.textContent='Please fill in all fields.';err.classList.add('show');return;}
+  const user=getUsers().find(u=>u.email===email&&u.pass===pass);
+  if(!user){err.textContent='Incorrect email or password.';err.classList.add('show');return;}
+  setSession({name:user.name,email:user.email,createdAt:user.createdAt});
+  closeModal();updateAuthUI();
+}
+
+function doSignout(){
+  clearSession();
+  document.getElementById('userDropdown')?.classList.remove('open');
+  updateAuthUI();
+}
+
+function toggleDropdown(){
+  document.getElementById('userDropdown')?.classList.toggle('open');
+}
+
+document.addEventListener('click',e=>{
+  const wrap=document.getElementById('userWrap');
+  if(wrap&&!wrap.contains(e.target))document.getElementById('userDropdown')?.classList.remove('open');
+});
+
+document.addEventListener('keydown',e=>{
+  const modal=document.getElementById('authModal');
+  if(!modal.classList.contains('open'))return;
+  if(e.key==='Escape')closeModal();
+  else if(e.key==='Enter')
+    document.getElementById('formSignup').classList.contains('active')?doSignup():doLogin();
+});
+
+function updateAuthUI(){
+  const s=getSession();
+  const slot=document.getElementById('authNav');
+  if(!slot)return;
+  if(s){
+    const ini=s.name.trim().split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,2)||'?';
+    slot.innerHTML=`<div class="user-wrap" id="userWrap"><div class="user-avatar" onclick="toggleDropdown()">${ini}</div><div class="user-dropdown" id="userDropdown"><div class="ud-name">${s.name}</div><div class="ud-email">${s.email}</div><button class="ud-item" onclick="doSignout()">Sign out</button></div></div><a href="peal-rater.html" class="nav-cta">Try free →</a>`;
+  }else{
+    slot.innerHTML=`<button class="btn-signin" onclick="openModal('login')">Sign in</button><a href="peal-rater.html" class="nav-cta">Try free →</a>`;
+  }
+}
+
+updateAuthUI();
 </script>
 </body>
 </html>

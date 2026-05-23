@@ -235,6 +235,53 @@ textarea::placeholder{color:var(--dim)}
 
 .retry{display:block;margin:0 auto;background:transparent;border:1px solid var(--b1);border-radius:6px;padding:10px 22px;color:var(--sub);font-size:.8rem;font-family:inherit;cursor:pointer;transition:all .15s;letter-spacing:.04em}
 .retry:hover{border-color:var(--b2);color:var(--text)}
+
+/* ── PAGE LOAD ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+.topbar{animation:slideDown .5s .05s cubic-bezier(.25,.8,.25,1) both}
+.header{animation:fadeUp .6s .15s cubic-bezier(.25,.8,.25,1) both}
+.source-block{animation:fadeUp .6s .25s cubic-bezier(.25,.8,.25,1) both}
+.peal-stage{animation:fadeUp .6s .35s cubic-bezier(.25,.8,.25,1) both}
+
+/* ── AUTH MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(3,3,13,.88);backdrop-filter:blur(10px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:36px;width:100%;max-width:420px;margin:20px;position:relative;transform:translateY(18px) scale(.98);transition:transform .32s cubic-bezier(.22,.8,.44,1);box-shadow:0 24px 80px rgba(0,0,0,.5)}
+.modal-overlay.open .modal{transform:none}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--dim);font-size:.95rem;cursor:pointer;padding:6px 8px;line-height:1;transition:color .15s;border-radius:4px}
+.modal-close:hover{color:var(--text)}
+.modal-tabs{display:flex;gap:0;border-bottom:1px solid var(--b0);margin-bottom:26px}
+.modal-tab{flex:1;padding:10px;background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--dim);font-size:.76rem;font-weight:700;font-family:inherit;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;transition:all .18s}
+.modal-tab.active{color:var(--text);border-bottom-color:var(--accent)}
+.modal-form{display:none}
+.modal-form.active{display:block}
+.modal-heading{font-size:1.3rem;font-weight:800;letter-spacing:-.02em;color:var(--text);margin-bottom:5px}
+.modal-sub{font-size:.78rem;color:var(--sub);margin-bottom:22px;line-height:1.5}
+.form-group{margin-bottom:14px}
+.form-label{font-size:.63rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);display:block;margin-bottom:6px}
+.form-input{width:100%;background:rgba(80,110,255,.04);border:1px solid var(--b1);border-radius:7px;padding:11px 14px;color:var(--text);font-size:.87rem;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none}
+.form-input:focus{border-color:rgba(80,110,255,.42);box-shadow:0 0 0 3px rgba(80,110,255,.09)}
+.form-input::placeholder{color:var(--dim)}
+.form-err{font-size:.72rem;color:#ff7878;margin-top:6px;display:none;line-height:1.4}
+.form-err.show{display:block}
+.btn-auth{width:100%;padding:12px;background:var(--accent);border:none;border-radius:7px;color:#fff;font-size:.84rem;font-weight:700;font-family:inherit;cursor:pointer;margin-top:10px;transition:all .2s;letter-spacing:.03em;box-shadow:0 0 22px rgba(80,110,255,.28)}
+.btn-auth:hover{background:var(--accent2);box-shadow:0 0 34px rgba(80,110,255,.45);transform:translateY(-1px)}
+.modal-switch{text-align:center;margin-top:16px;font-size:.75rem;color:var(--sub)}
+.modal-switch a{color:var(--accent2);text-decoration:none;cursor:pointer}
+.modal-switch a:hover{text-decoration:underline}
+.auth-nav-slot{display:flex;align-items:center;gap:10px}
+.btn-signin{padding:7px 16px;background:transparent;border:1px solid var(--b1);border-radius:6px;color:var(--sub);font-size:.79rem;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-signin:hover{border-color:var(--b2);color:var(--text)}
+.user-wrap{position:relative}
+.user-avatar{width:33px;height:33px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;color:#fff;cursor:pointer;transition:box-shadow .2s,transform .18s;flex-shrink:0;user-select:none}
+.user-avatar:hover{box-shadow:0 0 18px rgba(80,110,255,.55);transform:scale(1.06)}
+.user-dropdown{position:absolute;top:calc(100% + 10px);right:0;background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:6px;min-width:190px;z-index:200;opacity:0;pointer-events:none;transform:translateY(-8px) scale(.97);transition:all .2s cubic-bezier(.22,.8,.44,1);box-shadow:0 14px 44px rgba(0,0,0,.45)}
+.user-dropdown.open{opacity:1;pointer-events:all;transform:none}
+.ud-name{padding:10px 12px 4px;font-size:.83rem;font-weight:700;color:var(--text)}
+.ud-email{padding:0 12px 10px;font-size:.71rem;color:var(--sub);border-bottom:1px solid var(--b0);margin-bottom:4px;word-break:break-all}
+.ud-item{display:block;width:100%;padding:8px 12px;background:none;border:none;color:var(--sub);font-size:.79rem;font-family:inherit;cursor:pointer;border-radius:6px;text-align:left;transition:all .15s}
+.ud-item:hover{background:rgba(80,110,255,.08);color:var(--text)}
 </style>
 </head>
 <body>
@@ -272,7 +319,7 @@ textarea::placeholder{color:var(--dim)}
         <span class="logo-wordmark-main">PEAL Master</span>
       </div>
     </div>
-    <div class="status-pill"><div class="pulse"></div>Ready</div>
+    <div class="auth-nav-slot" id="authNav"></div>
   </div>
 
   <!-- HERO -->
@@ -387,6 +434,55 @@ textarea::placeholder{color:var(--dim)}
     </div>
 
     <button class="retry" onclick="resetAll()">← Start over</button>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+      <button class="modal-tab" id="tabLogin" onclick="switchTab('login')">Log In</button>
+    </div>
+    <div class="modal-form active" id="formSignup">
+      <div class="modal-heading">Create an account</div>
+      <div class="modal-sub">Free to start — track your progress over time.</div>
+      <div class="form-group">
+        <label class="form-label">Name</label>
+        <input class="form-input" id="su-name" type="text" placeholder="Your name" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" id="su-email" type="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" id="su-pass" type="password" placeholder="At least 6 characters">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <input class="form-input" id="su-pass2" type="password" placeholder="Repeat your password">
+        <div class="form-err" id="su-err"></div>
+      </div>
+      <button class="btn-auth" onclick="doSignup()">Create Account →</button>
+      <div class="modal-switch">Already have an account? <a onclick="switchTab('login')">Log in</a></div>
+    </div>
+    <div class="modal-form" id="formLogin">
+      <div class="modal-heading">Welcome back</div>
+      <div class="modal-sub">Log in to see your saved analyses and progress.</div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" id="li-email" type="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" id="li-pass" type="password" placeholder="Your password">
+        <div class="form-err" id="li-err"></div>
+      </div>
+      <button class="btn-auth" onclick="doLogin()">Log In →</button>
+      <div class="modal-switch">No account yet? <a onclick="switchTab('signup')">Sign up free</a></div>
+    </div>
   </div>
 </div>
 
@@ -908,6 +1004,96 @@ function resetAll(){
   document.getElementById('wc').textContent='0 words';
   window.scrollTo({top:0,behavior:'smooth'});
 }
+
+// ── AUTH ──────────────────────────────────────────────────────────────────
+function getUsers(){try{return JSON.parse(localStorage.getItem('pm_users')||'[]');}catch{return[];}}
+function saveUsers(u){localStorage.setItem('pm_users',JSON.stringify(u));}
+function getSession(){try{return JSON.parse(localStorage.getItem('pm_session')||'null');}catch{return null;}}
+function setSession(u){localStorage.setItem('pm_session',JSON.stringify(u));}
+function clearSession(){localStorage.removeItem('pm_session');}
+
+function openModal(tab){
+  document.getElementById('authModal').classList.add('open');
+  switchTab(tab||'signup');
+}
+function closeModal(){document.getElementById('authModal').classList.remove('open');}
+function handleOverlayClick(e){if(e.target===e.currentTarget)closeModal();}
+
+function switchTab(tab){
+  const s=tab==='signup';
+  document.getElementById('tabSignup').classList.toggle('active',s);
+  document.getElementById('tabLogin').classList.toggle('active',!s);
+  document.getElementById('formSignup').classList.toggle('active',s);
+  document.getElementById('formLogin').classList.toggle('active',!s);
+}
+
+function doSignup(){
+  const name=document.getElementById('su-name').value.trim();
+  const email=document.getElementById('su-email').value.trim().toLowerCase();
+  const pass=document.getElementById('su-pass').value;
+  const pass2=document.getElementById('su-pass2').value;
+  const err=document.getElementById('su-err');
+  err.classList.remove('show');
+  if(!name||!email||!pass){err.textContent='Please fill in all fields.';err.classList.add('show');return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.textContent='Enter a valid email address.';err.classList.add('show');return;}
+  if(pass.length<6){err.textContent='Password must be at least 6 characters.';err.classList.add('show');return;}
+  if(pass!==pass2){err.textContent='Passwords do not match.';err.classList.add('show');return;}
+  const users=getUsers();
+  if(users.find(u=>u.email===email)){err.textContent='An account with this email already exists.';err.classList.add('show');return;}
+  const user={name,email,pass,createdAt:Date.now()};
+  users.push(user);saveUsers(users);
+  setSession({name,email,createdAt:user.createdAt});
+  closeModal();updateAuthUI();
+}
+
+function doLogin(){
+  const email=document.getElementById('li-email').value.trim().toLowerCase();
+  const pass=document.getElementById('li-pass').value;
+  const err=document.getElementById('li-err');
+  err.classList.remove('show');
+  if(!email||!pass){err.textContent='Please fill in all fields.';err.classList.add('show');return;}
+  const user=getUsers().find(u=>u.email===email&&u.pass===pass);
+  if(!user){err.textContent='Incorrect email or password.';err.classList.add('show');return;}
+  setSession({name:user.name,email:user.email,createdAt:user.createdAt});
+  closeModal();updateAuthUI();
+}
+
+function doSignout(){
+  clearSession();
+  document.getElementById('userDropdown')?.classList.remove('open');
+  updateAuthUI();
+}
+
+function toggleDropdown(){
+  document.getElementById('userDropdown')?.classList.toggle('open');
+}
+
+document.addEventListener('click',e=>{
+  const wrap=document.getElementById('userWrap');
+  if(wrap&&!wrap.contains(e.target))document.getElementById('userDropdown')?.classList.remove('open');
+});
+
+document.addEventListener('keydown',e=>{
+  const modal=document.getElementById('authModal');
+  if(!modal.classList.contains('open'))return;
+  if(e.key==='Escape')closeModal();
+  else if(e.key==='Enter')
+    document.getElementById('formSignup').classList.contains('active')?doSignup():doLogin();
+});
+
+function updateAuthUI(){
+  const s=getSession();
+  const slot=document.getElementById('authNav');
+  if(!slot)return;
+  if(s){
+    const ini=s.name.trim().split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,2)||'?';
+    slot.innerHTML=`<div class="user-wrap" id="userWrap"><div class="user-avatar" onclick="toggleDropdown()">${ini}</div><div class="user-dropdown" id="userDropdown"><div class="ud-name">${s.name}</div><div class="ud-email">${s.email}</div><button class="ud-item" onclick="doSignout()">Sign out</button></div></div>`;
+  }else{
+    slot.innerHTML=`<button class="btn-signin" onclick="openModal('login')">Sign in</button><button class="btn-signin" style="background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 14px rgba(80,110,255,.3)" onclick="openModal('signup')">Sign up free</button>`;
+  }
+}
+
+updateAuthUI();
 </script>
 </body>
 </html>
