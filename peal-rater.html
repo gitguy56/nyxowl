@@ -19,7 +19,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 @keyframes twinkle{0%,100%{opacity:.1}50%{opacity:.8}}
 .wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:24px 16px 80px}
 
-/* header */
 header{text-align:center;padding:48px 0 32px}
 .logo{font-size:clamp(2.4rem,6vw,4rem);font-weight:900;letter-spacing:-1px;filter:drop-shadow(0 0 24px #7c3aed88)}
 .logo span{display:inline-block;animation:float 3s ease-in-out infinite}
@@ -33,63 +32,68 @@ header{text-align:center;padding:48px 0 32px}
 .legend-item{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--muted)}
 .legend-dot{width:10px;height:10px;border-radius:50%}
 
-/* card */
+/* step headers */
+.step-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.step-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:900;flex-shrink:0}
+.step-title{font-weight:700;font-size:1rem}
+.step-sub{font-size:.78rem;color:var(--muted);margin-top:1px}
+
 .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px}
-.card-title{font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.card-label{font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
 
 /* subject */
-.subject-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
-.subj-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;font-size:.8rem;transition:all .2s}
+.subject-row{display:flex;gap:8px;flex-wrap:wrap}
+.subj-btn{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;font-size:.79rem;transition:all .2s}
 .subj-btn.active,.subj-btn:hover{border-color:var(--accent);color:var(--text);background:rgba(124,58,237,.15)}
 .subj-btn.active{box-shadow:0 0 10px rgba(124,58,237,.3)}
 
-/* input tabs */
-.input-tabs{display:flex;gap:2px;margin-bottom:16px;background:var(--surface2);border-radius:10px;padding:4px}
-.tab-btn{flex:1;padding:8px;border:none;border-radius:8px;background:transparent;color:var(--muted);cursor:pointer;font-size:.85rem;font-weight:600;transition:all .2s}
-.tab-btn.active{background:var(--surface3);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.4)}
-
 /* upload zone */
-.upload-zone{border:2px dashed var(--border);border-radius:12px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .3s;position:relative}
-.upload-zone:hover,.upload-zone.drag-over{border-color:var(--accent);background:rgba(124,58,237,.06)}
+.upload-zone{border:2px dashed var(--border);border-radius:12px;padding:28px 16px;text-align:center;cursor:pointer;transition:all .3s;position:relative;background:var(--surface2)}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--accent);background:rgba(124,58,237,.07)}
 .upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.upload-icon{font-size:2.4rem;margin-bottom:12px}
-.upload-title{font-weight:700;font-size:1rem;margin-bottom:6px}
-.upload-sub{color:var(--muted);font-size:.82rem}
-.upload-types{display:flex;justify-content:center;gap:8px;margin-top:14px;flex-wrap:wrap}
-.type-chip{padding:3px 10px;border-radius:12px;font-size:.72rem;font-weight:600;border:1px solid var(--border);color:var(--muted)}
+.upload-icon{font-size:2rem;margin-bottom:8px}
+.upload-title{font-weight:700;font-size:.9rem}
+.upload-sub{color:var(--muted);font-size:.78rem;margin-top:4px}
 
-/* ocr progress */
-.ocr-progress{display:none;background:var(--surface2);border-radius:10px;padding:14px 16px;margin-top:12px}
-.ocr-progress.show{display:block}
-.ocr-label{font-size:.82rem;color:var(--muted);margin-bottom:8px}
-.ocr-track{height:6px;background:var(--surface3);border-radius:3px;overflow:hidden}
+/* ocr */
+.ocr-bar{display:none;margin-top:12px;background:var(--surface3);border-radius:8px;padding:10px 14px}
+.ocr-bar.show{display:block}
+.ocr-label{font-size:.78rem;color:var(--muted);margin-bottom:6px}
+.ocr-track{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
 .ocr-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;width:0;transition:width .3s}
 
-/* extracted preview */
-.extracted-preview{display:none;margin-top:12px;background:var(--surface2);border-radius:10px;padding:12px 14px;font-size:.82rem;line-height:1.6;color:var(--muted);max-height:120px;overflow-y:auto;border:1px solid var(--border)}
-.extracted-preview.show{display:block}
-.extracted-preview strong{color:var(--text);display:block;margin-bottom:4px;font-size:.72rem;letter-spacing:1px;text-transform:uppercase}
+/* text displays */
+.source-display{display:none;margin-top:14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;max-height:200px;overflow-y:auto;font-size:.85rem;line-height:1.8;white-space:pre-wrap;color:var(--text)}
+.source-display.show{display:block}
+.source-display-label{font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent2);margin-bottom:8px}
 
-/* textarea */
-#pealInput{width:100%;min-height:200px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;color:var(--text);font-size:.95rem;line-height:1.7;font-family:inherit;resize:vertical;outline:none;transition:border-color .3s}
-#pealInput:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,58,237,.15)}
-#pealInput::placeholder{color:var(--muted)}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+@media(max-width:580px){.input-row{grid-template-columns:1fr}}
+.or-divider{display:flex;align-items:center;gap:10px;margin-bottom:12px;color:var(--muted);font-size:.78rem}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
-.meta-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:8px}
-.word-count{font-size:.78rem;color:var(--muted)}
+textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;color:var(--text);font-size:.9rem;line-height:1.7;font-family:inherit;resize:vertical;outline:none;transition:border-color .3s}
+textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+textarea::placeholder{color:var(--muted)}
+#sourceInput{min-height:130px}
+#pealInput{min-height:180px}
+
+.meta-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px}
+.word-count{font-size:.77rem;color:var(--muted)}
 .word-count span{color:var(--accent2)}
 .analyze-btn{padding:12px 32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:12px;color:#fff;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:.5px;transition:all .3s}
 .analyze-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,58,237,.4)}
 .analyze-btn:active{transform:translateY(0)}
 .analyze-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 
-/* loading */
+/* source badge — shown in results */
+.source-used{display:inline-flex;align-items:center;gap:6px;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25);border-radius:8px;padding:4px 12px;font-size:.75rem;color:var(--accent2);margin-bottom:16px}
+
 .loading{display:none;text-align:center;padding:40px}
 .loading.show{display:block}
-.spinner{display:inline-block;width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:16px}
+.spinner{display:inline-block;width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:14px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* results */
 #results{display:none}
 #results.show{display:block;animation:fadeUp .5s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -97,7 +101,7 @@ header{text-align:center;padding:48px 0 32px}
 /* score hero */
 .score-hero{background:linear-gradient(135deg,var(--surface2),var(--surface3));border:1px solid var(--border);border-radius:20px;padding:32px;text-align:center;margin-bottom:20px;position:relative;overflow:hidden}
 .score-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(124,58,237,.15),transparent 70%);pointer-events:none}
-.grade-badge{display:inline-block;font-size:5rem;font-weight:900;line-height:1}
+.grade-badge{font-size:5rem;font-weight:900;line-height:1;display:inline-block}
 .score-num{font-size:1.1rem;color:var(--muted);margin-top:4px}
 .score-num strong{color:var(--text);font-size:1.4rem}
 .rank-label{margin-top:12px;display:inline-block;padding:4px 16px;border-radius:20px;font-size:.8rem;font-weight:700;letter-spacing:1px;text-transform:uppercase}
@@ -106,7 +110,6 @@ header{text-align:center;padding:48px 0 32px}
 .xp-track{height:10px;background:var(--surface);border-radius:5px;overflow:hidden;border:1px solid var(--border)}
 .xp-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width 1.5s cubic-bezier(.25,.46,.45,.94)}
 
-/* component cards */
 .components{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:20px}
 .comp-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;transition:all .3s;animation:fadeUp .5s ease both}
 .comp-card:hover{transform:translateY(-3px)}
@@ -123,20 +126,23 @@ header{text-align:center;padding:48px 0 32px}
 .status-ok{background:rgba(245,158,11,.15);color:var(--P)}
 .status-bad{background:rgba(239,68,68,.15);color:var(--danger)}
 
-/* feedback */
 .feedback-section{margin-bottom:20px}
 .feedback-title{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .feedback-title h3{font-size:1rem;font-weight:700}
 .f-badge{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:900}
 .feedback-item{background:var(--surface2);border-radius:10px;padding:14px 16px;margin-bottom:10px}
-.feedback-item p{font-size:.88rem;line-height:1.6;color:var(--muted)}
-.feedback-item p strong{color:var(--text)}
-.example-box{margin-top:10px;background:var(--surface3);border-radius:8px;padding:12px 14px;font-size:.83rem;line-height:1.6}
+.feedback-item>p{font-size:.88rem;line-height:1.6;color:var(--muted)}
+.feedback-item>p strong{color:var(--text)}
+.example-box{margin-top:10px;background:var(--surface3);border-radius:8px;padding:12px 14px;font-size:.83rem;line-height:1.7}
 .example-label{font-size:.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-.example-bad{color:#f87171;border-left:2px solid var(--danger);padding-left:10px;margin-bottom:8px;font-style:italic}
+.example-bad{color:#f87171;border-left:2px solid var(--danger);padding-left:10px;margin-bottom:10px;font-style:italic}
 .example-good{color:#86efac;border-left:2px solid var(--success);padding-left:10px}
 
-/* achievements */
+/* quote suggestions */
+.quote-suggestions{margin-top:12px;background:var(--surface3);border-radius:8px;padding:12px 14px}
+.quote-suggestions .qs-label{font-size:.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-bottom:8px}
+.quote-chip{display:inline-block;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2);border-radius:6px;padding:3px 10px;font-size:.78rem;color:var(--accent2);margin:3px 3px 3px 0;font-style:italic}
+
 .achievements{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
 .ach{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:.78rem;opacity:0;animation:achPop .4s ease forwards}
 @keyframes achPop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
@@ -144,7 +150,6 @@ header{text-align:center;padding:48px 0 32px}
 .ach-text strong{display:block;font-size:.8rem;color:var(--text)}
 .ach-text span{color:var(--muted);font-size:.72rem}
 
-/* tips */
 .tips-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
 .tip-card{background:var(--surface2);border-radius:12px;padding:16px}
 .tip-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
@@ -154,25 +159,17 @@ header{text-align:center;padding:48px 0 32px}
 .retry-btn{display:block;margin:24px auto 0;padding:10px 28px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--muted);cursor:pointer;font-size:.88rem;transition:all .2s}
 .retry-btn:hover{border-color:var(--accent);color:var(--text)}
 
-/* confetti */
 .confetti-piece{position:fixed;width:8px;height:8px;top:-10px;animation:confettiFall linear forwards;border-radius:2px;pointer-events:none;z-index:999}
 @keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
-
-@media(max-width:600px){
-  .components{grid-template-columns:1fr 1fr}
-  .score-hero{padding:20px}
-  .grade-badge{font-size:3.5rem}
-}
 </style>
 </head>
 <body>
 <div id="stars"></div>
 <div class="wrap">
+
   <header>
-    <div class="logo">
-      <span>P</span><span>E</span><span>A</span><span>L</span>&nbsp;MASTER
-    </div>
-    <div class="tagline">Upload or paste your paragraph — get real, specific feedback</div>
+    <div class="logo"><span>P</span><span>E</span><span>A</span><span>L</span>&nbsp;MASTER</div>
+    <div class="tagline">Upload your poem or text, then get feedback based on it</div>
     <div class="peal-legend">
       <div class="legend-item"><div class="legend-dot" style="background:var(--P)"></div>Point</div>
       <div class="legend-item"><div class="legend-dot" style="background:var(--E)"></div>Evidence</div>
@@ -181,9 +178,18 @@ header{text-align:center;padding:48px 0 32px}
     </div>
   </header>
 
+  <!-- STEP 1: SOURCE TEXT -->
   <div class="card">
-    <div class="card-title">Subject</div>
-    <div class="subject-row" id="subjRow">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Upload Your Source Text</div>
+        <div class="step-sub">The poem, passage, or article your PEAL is based on</div>
+      </div>
+    </div>
+
+    <div class="card-label">Subject</div>
+    <div class="subject-row" id="subjRow" style="margin-bottom:18px">
       <button class="subj-btn active" data-subj="english">📚 English Lit</button>
       <button class="subj-btn" data-subj="history">🏛 History</button>
       <button class="subj-btn" data-subj="science">🔬 Science</button>
@@ -191,56 +197,73 @@ header{text-align:center;padding:48px 0 32px}
       <button class="subj-btn" data-subj="rs">✝ RS / Ethics</button>
     </div>
 
-    <div class="card-title" style="margin-top:18px">Input Method</div>
-    <div class="input-tabs">
-      <button class="tab-btn active" onclick="switchTab('type')">✏️ Type / Paste</button>
-      <button class="tab-btn" onclick="switchTab('upload')">📎 Upload File or Image</button>
-    </div>
-
-    <!-- TYPE TAB -->
-    <div id="typeTab">
-      <textarea id="pealInput" placeholder="Start with your POINT, add EVIDENCE (quote or data), then ANALYSIS (how it proves your point), then LINK back to the question…"></textarea>
-      <div class="meta-row">
-        <div class="word-count">Words: <span id="wordCount">0</span> · Sentences: <span id="sentCount">0</span></div>
-      </div>
-    </div>
-
-    <!-- UPLOAD TAB -->
-    <div id="uploadTab" style="display:none">
-      <div class="upload-zone" id="uploadZone">
-        <input type="file" id="fileInput" accept=".txt,.text,image/*,.png,.jpg,.jpeg,.gif,.webp,.bmp" onchange="handleFile(this.files[0])">
+    <div class="input-row">
+      <div class="upload-zone" id="sourceZone">
+        <input type="file" id="sourceFile" accept=".txt,.text,image/*" onchange="handleSourceFile(this.files[0])">
         <div class="upload-icon">📄</div>
-        <div class="upload-title">Drop your file here or click to browse</div>
-        <div class="upload-sub">Supports text files and photos of your paragraph</div>
-        <div class="upload-types">
-          <span class="type-chip">.txt</span>
-          <span class="type-chip">JPG / PNG</span>
-          <span class="type-chip">Handwritten photo</span>
-          <span class="type-chip">Screenshot</span>
-        </div>
+        <div class="upload-title">Upload file or image</div>
+        <div class="upload-sub">.txt · JPG · PNG · screenshot</div>
       </div>
-      <div class="ocr-progress" id="ocrProgress">
-        <div class="ocr-label" id="ocrLabel">Reading image…</div>
-        <div class="ocr-track"><div class="ocr-fill" id="ocrFill"></div></div>
-      </div>
-      <div class="extracted-preview" id="extractedPreview">
-        <strong>Extracted Text</strong>
-        <span id="extractedText"></span>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div class="card-label" style="margin-bottom:2px">Or paste the text</div>
+        <textarea id="sourceInput" placeholder="Paste your poem, passage, or extract here…"></textarea>
       </div>
     </div>
 
-    <div class="meta-row" style="margin-top:16px">
-      <div class="word-count" id="sharedWordCount" style="display:none">Words: <span id="sharedWC">0</span> · Sentences: <span id="sharedSC">0</span></div>
-      <button class="analyze-btn" id="analyzeBtn" onclick="runAnalysis()" style="margin-left:auto">⚡ Analyze My PEAL</button>
+    <div class="ocr-bar" id="sourceOcrBar">
+      <div class="ocr-label" id="sourceOcrLabel">Reading image…</div>
+      <div class="ocr-track"><div class="ocr-fill" id="sourceOcrFill"></div></div>
+    </div>
+
+    <div class="source-display" id="sourceDisplay">
+      <div class="source-display-label">📖 Source Text Loaded</div>
+      <div id="sourceDisplayText"></div>
+    </div>
+  </div>
+
+  <!-- STEP 2: PEAL PARAGRAPH -->
+  <div class="card">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Your PEAL Paragraph</div>
+        <div class="step-sub">Type, paste, or upload your paragraph below</div>
+      </div>
+    </div>
+
+    <div class="input-row" style="margin-bottom:12px">
+      <div class="upload-zone" id="pealZone">
+        <input type="file" id="pealFile" accept=".txt,.text,image/*" onchange="handlePealFile(this.files[0])">
+        <div class="upload-icon">✍️</div>
+        <div class="upload-title">Upload your paragraph</div>
+        <div class="upload-sub">.txt · photo · screenshot</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div class="card-label" style="margin-bottom:2px">Or type / paste it</div>
+        <textarea id="pealInput" placeholder="Point → Evidence → Analysis → Link…"></textarea>
+      </div>
+    </div>
+
+    <div class="ocr-bar" id="pealOcrBar">
+      <div class="ocr-label" id="pealOcrLabel">Reading image…</div>
+      <div class="ocr-track"><div class="ocr-fill" id="pealOcrFill"></div></div>
+    </div>
+
+    <div class="meta-row">
+      <div class="word-count">Words: <span id="wordCount">0</span> · Sentences: <span id="sentCount">0</span></div>
+      <button class="analyze-btn" id="analyzeBtn" onclick="runAnalysis()">⚡ Analyze My PEAL</button>
     </div>
   </div>
 
   <div class="loading" id="loading">
     <div class="spinner"></div>
-    <p style="color:var(--muted);font-size:.9rem">Analyzing your paragraph…</p>
+    <p style="color:var(--muted);font-size:.9rem">Analyzing against your source text…</p>
   </div>
 
+  <!-- RESULTS -->
   <div id="results">
+    <div id="sourceBadge" class="source-used" style="display:none">📖 <span id="sourceBadgeText"></span></div>
+
     <div class="score-hero">
       <div class="grade-badge" id="gradeLetter">—</div>
       <div class="score-num">Score: <strong id="scoreDisplay">0</strong>/100 &nbsp;·&nbsp; Rating: <strong id="ratingDisplay">0</strong>/10</div>
@@ -250,21 +273,25 @@ header{text-align:center;padding:48px 0 32px}
         <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
       </div>
     </div>
+
     <div class="components" id="compCards"></div>
     <div id="feedbackArea"></div>
+
     <div class="card" id="achCard" style="display:none">
-      <div class="card-title">🏆 Achievements Unlocked</div>
+      <div class="card-label">🏆 Achievements Unlocked</div>
       <div class="achievements" id="achList"></div>
     </div>
+
     <div class="card">
-      <div class="card-title">📖 PEAL Quick Guide</div>
+      <div class="card-label">📖 PEAL Quick Guide</div>
       <div class="tips-grid">
-        <div class="tip-card"><div class="tip-top"><span class="tip-icon">🎯</span><h4 style="color:var(--P)">Point</h4></div><p>Open with a clear, arguable claim. Use verbs like <em>presents, explores, conveys, highlights</em> to anchor your argument.</p></div>
-        <div class="tip-card"><div class="tip-top"><span class="tip-icon">📌</span><h4 style="color:var(--E)">Evidence</h4></div><p>Quote directly ("<em>exact words</em>") or cite specific statistics, dates, or events. Embed short quotes naturally into your sentence.</p></div>
-        <div class="tip-card"><div class="tip-top"><span class="tip-icon">🔍</span><h4 style="color:var(--A)">Analysis</h4></div><p>Use "<em>this suggests / this implies / the word '…' connotes</em>" to explain HOW and WHY the evidence supports your point.</p></div>
-        <div class="tip-card"><div class="tip-top"><span class="tip-icon">🔗</span><h4 style="color:var(--L)">Link</h4></div><p>Finish by connecting back to the question. Use "<em>Overall / Therefore / Ultimately / This demonstrates that…</em>" to close the loop.</p></div>
+        <div class="tip-card"><div class="tip-top"><span>🎯</span><h4 style="color:var(--P)">Point</h4></div><p>Open with a clear, arguable claim. Use <em>presents, explores, conveys, highlights</em> to anchor your argument.</p></div>
+        <div class="tip-card"><div class="tip-top"><span>📌</span><h4 style="color:var(--E)">Evidence</h4></div><p>Quote directly from your source text. Embed short quotes naturally: the author writes "<em>exact words</em>".</p></div>
+        <div class="tip-card"><div class="tip-top"><span>🔍</span><h4 style="color:var(--A)">Analysis</h4></div><p>Use <em>this suggests / this implies / the word '…' connotes</em> to explain HOW the evidence supports your point.</p></div>
+        <div class="tip-card"><div class="tip-top"><span>🔗</span><h4 style="color:var(--L)">Link</h4></div><p>Close with <em>Overall / Therefore / Ultimately</em> and connect back to the question.</p></div>
       </div>
     </div>
+
     <button class="retry-btn" onclick="resetAll()">↩ Try Another Paragraph</button>
   </div>
 </div>
@@ -283,386 +310,362 @@ header{text-align:center;padding:48px 0 32px}
 
 // ── STATE ──────────────────────────────────────────────────────────────────
 let currentSubject='english';
-let uploadedText='';
-let activeTab='type';
+let sourceText='';   // the poem/passage
+let pealUploaded=''; // uploaded PEAL paragraph text (if uploaded)
 
-// ── SUBJECT BUTTONS ────────────────────────────────────────────────────────
+// ── SUBJECT ────────────────────────────────────────────────────────────────
 document.getElementById('subjRow').addEventListener('click',e=>{
   const b=e.target.closest('.subj-btn');if(!b)return;
   document.querySelectorAll('.subj-btn').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');currentSubject=b.dataset.subj;
 });
 
-// ── TABS ───────────────────────────────────────────────────────────────────
-function switchTab(tab){
-  activeTab=tab;
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&tab==='type')||(i===1&&tab==='upload')));
-  document.getElementById('typeTab').style.display=tab==='type'?'block':'none';
-  document.getElementById('uploadTab').style.display=tab==='upload'?'block':'none';
-  document.getElementById('wordCount').parentElement.style.display=tab==='type'?'flex':'none';
-  document.getElementById('sharedWordCount').style.display=tab==='upload'&&uploadedText?'flex':'none';
-}
-
-// ── WORD COUNT (type tab) ──────────────────────────────────────────────────
+// ── WORD COUNT (typed PEAL) ────────────────────────────────────────────────
 document.getElementById('pealInput').addEventListener('input',function(){
-  const t=this.value.trim();
+  updatePealCount(this.value);
+});
+function updatePealCount(t){
+  t=t.trim();
   document.getElementById('wordCount').textContent=t?t.split(/\s+/).filter(w=>w).length:0;
   document.getElementById('sentCount').textContent=t?t.split(/[.!?]+/).filter(s=>s.trim()).length:0;
-});
+}
 
 // ── DRAG & DROP ────────────────────────────────────────────────────────────
-const zone=document.getElementById('uploadZone');
-zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over')});
-zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
-zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('drag-over');const f=e.dataTransfer.files[0];if(f)handleFile(f);});
+function setupDrop(zoneId,handler){
+  const z=document.getElementById(zoneId);
+  z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('drag-over')});
+  z.addEventListener('dragleave',()=>z.classList.remove('drag-over'));
+  z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('drag-over');const f=e.dataTransfer.files[0];if(f)handler(f);});
+}
+setupDrop('sourceZone',handleSourceFile);
+setupDrop('pealZone',handlePealFile);
 
-// ── FILE HANDLER ───────────────────────────────────────────────────────────
-function handleFile(file){
+// ── FILE ROUTING ───────────────────────────────────────────────────────────
+function handleSourceFile(file){
   if(!file)return;
-  if(file.type.startsWith('image/')){
-    handleImage(file);
-  }else if(file.type==='text/plain'||file.name.endsWith('.txt')){
-    handleTextFile(file);
-  }else{
-    showToast('Please upload a .txt file or an image (JPG, PNG, etc.)');
+  if(file.type.startsWith('image/')) runOCR(file,'source');
+  else if(file.type==='text/plain'||file.name.endsWith('.txt')) readText(file,text=>{
+    sourceText=text;showSourceDisplay(text);
+  });
+  else showToast('Upload a .txt file or an image');
+}
+function handlePealFile(file){
+  if(!file)return;
+  if(file.type.startsWith('image/')) runOCR(file,'peal');
+  else if(file.type==='text/plain'||file.name.endsWith('.txt')) readText(file,text=>{
+    pealUploaded=text;
+    document.getElementById('pealInput').value=text;
+    updatePealCount(text);
+  });
+  else showToast('Upload a .txt file or an image');
+}
+function readText(file,cb){
+  const r=new FileReader();r.onload=e=>cb(e.target.result.trim());r.readAsText(file);
+}
+
+// ── OCR ────────────────────────────────────────────────────────────────────
+function runOCR(file,target){
+  const barId=target==='source'?'sourceOcrBar':'pealOcrBar';
+  const fillId=target==='source'?'sourceOcrFill':'pealOcrFill';
+  const labelId=target==='source'?'sourceOcrLabel':'pealOcrLabel';
+  const bar=document.getElementById(barId);
+  const fill=document.getElementById(fillId);
+  const label=document.getElementById(labelId);
+  bar.classList.add('show');fill.style.width='5%';label.textContent='Loading OCR…';
+
+  if(window.Tesseract){doOCR();return;}
+  const s=document.createElement('script');
+  s.src='https://unpkg.com/tesseract.js@5/dist/tesseract.min.js';
+  s.onerror=()=>{bar.classList.remove('show');showToast('OCR failed — check your internet or paste text manually.');};
+  s.onload=doOCR;document.head.appendChild(s);
+
+  async function doOCR(){
+    try{
+      label.textContent='Reading image…';
+      const res=await Tesseract.recognize(file,'eng',{logger:m=>{
+        if(m.status==='recognizing text'){fill.style.width=Math.round(m.progress*100)+'%';label.textContent=`Reading… ${Math.round(m.progress*100)}%`;}
+      }});
+      fill.style.width='100%';label.textContent='Done!';
+      setTimeout(()=>bar.classList.remove('show'),1200);
+      const text=res.data.text.trim();
+      if(target==='source'){sourceText=text;showSourceDisplay(text);}
+      else{pealUploaded=text;document.getElementById('pealInput').value=text;updatePealCount(text);}
+    }catch(e){bar.classList.remove('show');showToast('Could not read image — try a clearer photo or paste text.');}
   }
 }
 
-function handleTextFile(file){
-  const reader=new FileReader();
-  reader.onload=e=>{
-    uploadedText=e.target.result.trim();
-    showExtracted(uploadedText);
-  };
-  reader.readAsText(file);
+// ── SOURCE DISPLAY ─────────────────────────────────────────────────────────
+function showSourceDisplay(text){
+  const el=document.getElementById('sourceDisplayText');
+  el.textContent=text.length>600?text.slice(0,600)+'…':text;
+  document.getElementById('sourceDisplay').classList.add('show');
 }
 
-// ── TESSERACT OCR ──────────────────────────────────────────────────────────
-let tesseractReady=false;
-function loadTesseract(cb){
-  if(window.Tesseract){cb();return;}
-  const s=document.createElement('script');
-  s.src='https://unpkg.com/tesseract.js@5/dist/tesseract.min.js';
-  s.onload=()=>{tesseractReady=true;cb();};
-  s.onerror=()=>showToast('Could not load OCR library. Check your internet connection.');
-  document.head.appendChild(s);
-}
+// also sync typed source textarea
+document.getElementById('sourceInput').addEventListener('input',function(){
+  sourceText=this.value.trim();
+  if(sourceText) showSourceDisplay(sourceText);
+  else document.getElementById('sourceDisplay').classList.remove('show');
+});
 
-async function handleImage(file){
-  const prog=document.getElementById('ocrProgress');
-  const fill=document.getElementById('ocrFill');
-  const label=document.getElementById('ocrLabel');
-  prog.classList.add('show');
-  fill.style.width='5%';
-  label.textContent='Loading OCR engine…';
+// ── SOURCE TEXT ANALYSIS ───────────────────────────────────────────────────
+const STOP=new Set(['the','a','an','and','or','but','is','was','are','were','be','been','being','have','has','had','do','does','did','will','would','could','should','may','might','shall','can','this','that','these','those','it','its','in','on','at','by','for','with','about','into','through','before','after','to','from','of','off','over','not','also','just','then','when','where','how','all','both','each','more','most','some','very','such','even','than','too','so','only','their','they','there','here','which','who','what','him','her','his','she','he','our','your','my','we','you','i','if','as','up','out','no','nor','yet','many','much','any','other','same','upon','shall','thy','thee','thou','hath','doth','tis']);
 
-  loadTesseract(async()=>{
-    try{
-      label.textContent='Reading your image…';
-      const result=await Tesseract.recognize(file,'eng',{
-        logger:m=>{
-          if(m.status==='recognizing text'){
-            const pct=Math.round(m.progress*100);
-            fill.style.width=pct+'%';
-            label.textContent=`Reading image… ${pct}%`;
-          }
-        }
-      });
-      fill.style.width='100%';
-      label.textContent='Done!';
-      setTimeout(()=>prog.classList.remove('show'),1200);
-      uploadedText=result.data.text.trim();
-      showExtracted(uploadedText);
-    }catch(err){
-      prog.classList.remove('show');
-      showToast('OCR failed — try a clearer image or paste text manually.');
-      console.error(err);
-    }
-  });
-}
+function extractSourceInsights(src){
+  if(!src) return {quotes:[],keywords:[],author:null,isPoem:false};
 
-function showExtracted(text){
-  const el=document.getElementById('extractedText');
-  el.textContent=text.length>400?text.slice(0,400)+'…':text;
-  document.getElementById('extractedPreview').classList.add('show');
-  const wc=text.split(/\s+/).filter(w=>w).length;
-  const sc=text.split(/[.!?]+/).filter(s=>s.trim()).length;
-  document.getElementById('sharedWC').textContent=wc;
-  document.getElementById('sharedSC').textContent=sc;
-  document.getElementById('sharedWordCount').style.display='flex';
-}
+  // detect if poetry (short lines)
+  const lines=src.split('\n').filter(l=>l.trim());
+  const isPoem=lines.length>3&&lines.filter(l=>l.trim().split(/\s+/).length<12).length>lines.length*.5;
 
-// ── GET TEXT ───────────────────────────────────────────────────────────────
-function getText(){
-  if(activeTab==='upload') return uploadedText;
-  return document.getElementById('pealInput').value.trim();
-}
+  // pull quotable phrases: lines (for poems) or 4-10 word stretches
+  let quotes=[];
+  if(isPoem){
+    quotes=lines.filter(l=>l.trim().length>8&&l.trim().split(/\s+/).length>=3).map(l=>l.trim()).slice(0,12);
+  }else{
+    // extract clauses
+    const clauses=src.split(/[,;:.!?\n]+/).map(s=>s.trim()).filter(s=>{const w=s.split(/\s+/).length;return w>=4&&w<=14;});
+    quotes=clauses.slice(0,12);
+  }
 
-// ── CONTEXT EXTRACTOR ──────────────────────────────────────────────────────
-const KNOWN_AUTHORS=['Shakespeare','Dickens','Orwell','Austen','Hardy','Shelley','Golding','Steinbeck','Fitzgerald','Hemingway','Brontë','Bronte','Milton','Blake','Keats','Wordsworth','Tennyson','Browning','Churchill','Hitler','Stalin','Roosevelt','Lenin','Marx','Darwin','Freud','Einstein','Chaucer','Marlowe','Donne','Pope','Swift','Defoe','Richardson','Fielding','Sterne','Wollstonecraft','Coleridge','Byron','Shelley','Lamb','Hazlitt','Carlyle','Ruskin','Eliot','Trollope','Thackeray','Gaskell','Collins','Stevenson','Wilde','Conrad','Woolf','Lawrence','Joyce','Huxley','Waugh','Greene','Amis','Larkin','Hughes','Plath','Seamus','Heaney','Atwood','Morrison','Achebe','Achebe'];
+  // strong/unusual content words
+  const words=src.toLowerCase().replace(/[^a-z\s'-]/g,' ').split(/\s+/).filter(w=>w.length>3&&!STOP.has(w));
+  const freq={};words.forEach(w=>{freq[w]=(freq[w]||0)+1;});
+  const keywords=Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,10).map(e=>e[0]);
 
-const STOP_WORDS=new Set(['the','a','an','and','or','but','is','was','are','were','be','been','being','have','has','had','do','does','did','will','would','could','should','may','might','shall','can','this','that','these','those','it','its','in','on','at','by','for','with','about','into','through','before','after','to','from','of','off','over','not','also','just','then','when','where','how','all','both','each','more','most','some','very','such','even','than','too','so','only','their','they','there','here','which','who','what','him','her','his','she','he','his','our','your','my','we','you','i','if','as','up','out','no','nor','yet','both','either','each','many','much','any','other','same']);
-
-function extractContext(text){
-  const authorMatch=text.match(new RegExp(`\\b(${KNOWN_AUTHORS.join('|')})\\b`));
+  // detect known authors from source text
+  const KNOWN=['Shakespeare','Dickens','Orwell','Austen','Hardy','Shelley','Golding','Steinbeck','Fitzgerald','Hemingway','Bronte','Milton','Blake','Keats','Wordsworth','Tennyson','Browning','Churchill','Chaucer','Marlowe','Donne','Pope','Swift','Defoe','Woolf','Lawrence','Joyce','Huxley','Waugh','Conrad','Atwood','Morrison','Achebe','Plath','Hughes','Heaney','Owen','Sassoon','Larkin','Duffy','Armitage','Rossetti','Browning','Whitman','Frost','Yeats','Eliot','Auden','Betjeman'];
+  const authorMatch=src.match(new RegExp(`\\b(${KNOWN.join('|')})\\b`));
   const author=authorMatch?authorMatch[1]:null;
 
-  // extract key content words
-  const words=text.toLowerCase().replace(/[^a-z\s]/g,' ').split(/\s+/).filter(w=>w.length>3&&!STOP_WORDS.has(w));
-  const freq={};
-  words.forEach(w=>{freq[w]=(freq[w]||0)+1;});
-  const topWords=Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,6).map(e=>e[0]);
-
-  // extract quoted text if present
-  const quoteMatch=text.match(/"([^"]{4,60})"|'([^']{4,60})'|"([^"]{4,60})"|'([^']{4,60})'/);
-  const quote=quoteMatch?(quoteMatch[1]||quoteMatch[2]||quoteMatch[3]||quoteMatch[4]):null;
-
-  // guess topic/theme from top words
-  const topic=topWords[0]||'this theme';
-  const topic2=topWords[1]||topic;
-
-  // try to get the text/work title (word before a known pattern)
-  const titleMatch=text.match(/\b(in|from|within|throughout)\s+([A-Z][a-zA-Z\s]{2,20}?)[\s,]/);
-  const workTitle=titleMatch?titleMatch[2].trim():null;
-
-  return{author,topic,topic2,quote,topWords,workTitle};
+  return{quotes,keywords,author,isPoem};
 }
 
-// truncate sentence for display
-function truncSent(s,max=80){
-  s=s.trim();
-  if(s.length<=max)return s;
-  return s.slice(0,max).replace(/\s\w+$/,'')+'…';
-}
-
-// ── ANALYSIS ENGINE ────────────────────────────────────────────────────────
-function analyzePEAL(text,subject){
-  const lower=text.toLowerCase();
-  const sentences=text.split(/(?<=[.!?])\s+/).map(s=>s.trim()).filter(s=>s.length>5);
-  const words=text.split(/\s+/).filter(w=>w);
-  const wordCount=words.length;
+// ── PEAL ANALYSIS ENGINE ───────────────────────────────────────────────────
+function analyzePEAL(pealText,srcInsights,subject){
+  const lower=pealText.toLowerCase();
+  const sentences=pealText.split(/(?<=[.!?])\s+/).map(s=>s.trim()).filter(s=>s.length>5);
+  const wordCount=pealText.split(/\s+/).filter(w=>w).length;
   const firstSent=sentences[0]||'';
   const lastSent=sentences[sentences.length-1]||'';
-  const ctx=extractContext(text);
+  const{quotes,keywords,author,isPoem}=srcInsights;
+  const authorStr=author||(subject==='history'?'the historian':(isPoem?'the poet':'the author'));
+  const textType=isPoem?'poem':(subject==='history'?'source':'text');
+  const topic=keywords[0]||'this theme';
+  const topic2=keywords[1]||keywords[0]||'its significance';
 
-  // ── POINT ──────────────────────────────────────────────────────────────
+  // pick 2-3 good quotes from source to suggest
+  const suggestedQuotes=quotes.filter(q=>q.toLowerCase()!==firstSent.toLowerCase()).slice(0,3);
+
+  // check if they actually quoted from the source
+  const theirQuoteMatch=pealText.match(/"([^"]{4,})"|'([^']{4,})'|"([^"]{4,})"|'([^']{4,})'/);
+  const theirQuote=theirQuoteMatch?(theirQuoteMatch[1]||theirQuoteMatch[2]||theirQuoteMatch[3]||theirQuoteMatch[4]):null;
+  const quoteInSource=theirQuote&&sourceText?sourceText.toLowerCase().includes(theirQuote.toLowerCase().slice(0,15)):false;
+
+  // ── POINT ─────────────────────────────────────────────────────────────
   let P=0;
   const pointVerbs=['shows','presents','explores','demonstrates','conveys','represents','suggests','reveals','highlights','argues','portrays','depicts','emphasizes','illustrates','reflects','examines','creates','develops','establishes','employs','uses'];
-  const stanceAdverbs=['clearly','significantly','effectively','powerfully','crucially','notably','importantly','fundamentally','primarily','particularly','strikingly','vividly','subtly','explicitly'];
+  const stanceAdverbs=['clearly','significantly','effectively','powerfully','crucially','notably','importantly','fundamentally','particularly','strikingly','vividly','subtly','explicitly'];
   const hasPointVerbFirst=pointVerbs.some(k=>firstSent.toLowerCase().includes(k));
   const hasPointVerbAny=pointVerbs.some(k=>lower.includes(k));
   const hasStance=stanceAdverbs.some(k=>lower.includes(k));
-  const firstSentLen=(firstSent.split(/\s+/).length);
-  if(hasPointVerbFirst)P+=12; else if(hasPointVerbAny)P+=6;
+  const firstLen=firstSent.split(/\s+/).length;
+  if(hasPointVerbFirst)P+=12;else if(hasPointVerbAny)P+=6;
   if(hasStance)P+=7;
-  if(firstSentLen>=10)P+=6; else if(firstSentLen>=6)P+=3;
+  if(firstLen>=10)P+=6;else if(firstLen>=6)P+=3;
   P=Math.min(25,P);
 
   // ── EVIDENCE ──────────────────────────────────────────────────────────
   let E=0;
-  const hasQuote=/"[^"]{3,}"/.test(text)||/'[^']{3,}'/.test(text)||/“[^”]{3,}”/.test(text)||/‘[^’]{3,}’/.test(text);
-  const hasStat=/\d+(\.\d+)?%|\bin (1[0-9]{3}|20[0-9]{2})\b|\d+\s*(million|billion|thousand|people|km|miles|degrees|students|times|soldiers|casualties)/i.test(text);
-  const hasNamedRef=/[A-Z][a-z]+\s+(says|states|writes|claims|argues|noted|wrote|said|stated|reported|found|discovered)/i.test(text);
-  const hasEvidIntro=/(for example|for instance|such as|as (the )?(author|writer|poet|playwright|speaker|character|historian) (writes?|states?|says?|suggests?|describes?|argues?)|in (chapter|act|scene|line|stanza|verse|paragraph)|according to|as seen in|as shown|as illustrated|the (text|source|poem|play|novel|passage|article|extract) (states?|says?|shows?|suggests?)|as quoted in)/i.test(text);
+  const hasQuote=/"[^"]{3,}"/.test(pealText)||/'[^']{3,}'/.test(pealText)||/"[^"]{3,}"/.test(pealText)||/'[^']{3,}'/.test(pealText);
+  const hasStat=/\d+(\.\d+)?%|\bin (1[0-9]{3}|20[0-9]{2})\b|\d+\s*(million|billion|thousand|people|km|miles|degrees|times|soldiers)/i.test(pealText);
+  const hasEvidIntro=/(for example|for instance|as (the )?(author|writer|poet|playwright|historian|speaker) (writes?|states?|says?|suggests?|argues?)|in (chapter|act|scene|line|stanza|verse)|according to|as seen|as shown|as written|as quoted)/i.test(pealText);
   if(hasQuote)E+=14;
   if(hasStat)E+=8;
-  if(hasNamedRef)E+=5;
   if(hasEvidIntro)E+=6;
-  if(!hasQuote&&!hasStat&&!hasNamedRef)E=Math.min(E,5);
+  if(theirQuote&&quoteInSource)E+=5; // bonus: quote actually from source
+  if(!hasQuote&&!hasStat)E=Math.min(E,5);
   E=Math.min(25,E);
 
   // ── ANALYSIS ──────────────────────────────────────────────────────────
   let A=0;
   const analysisPatterns=[
     {re:/this (suggests?|implies?|shows?|demonstrates?|highlights?|conveys?|reflects?|reveals?|indicates?|signifies?|emphasizes?|illustrates?|reinforces?)/i,sc:12},
-    {re:/(the (word|phrase|verb|noun|adjective|metaphor|simile|imagery|repetition|structure|use of|choice of))\s+/i,sc:10},
-    {re:/(the (reader|audience|viewer|character|narrator) (is|are|made to|feels?|understands?|sees?|recognises?|becomes?|senses?))/i,sc:8},
+    {re:/(the (word|phrase|verb|noun|adjective|metaphor|simile|imagery|repetition|structure|use of|choice of))/i,sc:10},
+    {re:/(the (reader|audience|viewer|character) (is|are|made to|feels?|understands?|sees?|recognises?|becomes?))/i,sc:8},
     {re:/(because|since|as a result|therefore|thus|hence|consequently|which means|meaning that|this is because)/i,sc:6},
     {re:/(furthermore|moreover|additionally|in addition)/i,sc:3},
-    {re:/(connotes?|symbolises?|symbolizes?|represents?|effect|impact|purpose|intent|technique|device)/i,sc:5},
+    {re:/(connotes?|symbolises?|symbolizes?|represents?|effect|impact|purpose|technique|device)/i,sc:5},
     {re:/(could (also )?suggest|might imply|perhaps|arguably|one could argue)/i,sc:4},
   ];
-  for(const{re,sc}of analysisPatterns){if(re.test(text))A+=sc;}
+  for(const{re,sc}of analysisPatterns)if(re.test(pealText))A+=sc;
   if(wordCount>120)A+=5;else if(wordCount>80)A+=3;else if(wordCount>50)A+=1;
   A=Math.min(25,A);
 
   // ── LINK ──────────────────────────────────────────────────────────────
   let L=0;
-  const linkPatterns=[
-    {re:/(overall,?|in conclusion,?|to conclude,?|in summary,?)/i,sc:10},
-    {re:/(therefore,?|thus,?|ultimately,?|in this way,?|consequently,?)/i,sc:8},
-    {re:/this (shows?|demonstrates?|suggests?|reinforces?|connects?|relates?) (that|how|why|to)/i,sc:7},
-    {re:/(links? back to|connects? back|relates? to|ties? back)/i,sc:5},
-    {re:/is (important|significant|crucial|key|central|vital|essential) (to|because|as)/i,sc:4},
-  ];
-  for(const{re,sc}of linkPatterns){if(re.test(text))L+=sc;}
-  const lastHasLink=/(overall|therefore|ultimately|thus|in conclusion|in this way|this demonstrates|this shows|this suggests|consequently)/i.test(lastSent);
-  if(lastHasLink)L+=8;
+  if(/(overall,?|in conclusion,?|to conclude,?|in summary,?)/i.test(pealText))L+=10;
+  if(/(therefore,?|thus,?|ultimately,?|in this way,?|consequently,?)/i.test(pealText))L+=8;
+  if(/this (shows?|demonstrates?|suggests?|reinforces?) (that|how|why)/i.test(pealText))L+=7;
+  if(/(links? back|connects? back|relates? to|ties? back)/i.test(pealText))L+=5;
+  if(/(overall|therefore|ultimately|thus|in conclusion|in this way|this demonstrates)/i.test(lastSent))L+=8;
   L=Math.min(25,L);
 
   const total=P+E+A+L;
 
-  // ── CONTEXT-AWARE FEEDBACK ─────────────────────────────────────────────
-  const authorStr=ctx.author||(subject==='history'?'the historian':'the author');
-  const topic=ctx.topic;
-  const topic2=ctx.topic2;
-  const workStr=ctx.workTitle?`in ${ctx.workTitle}`:'in this text';
-
-  // pick the most likely "evidence sentence" (the one with a quote or in the middle)
+  // ── CONTEXT-AWARE FEEDBACK USING SOURCE TEXT ───────────────────────────
   const evidSentIdx=sentences.findIndex(s=>/"/.test(s)||/'/.test(s));
-  const evidSent=evidSentIdx>-1?sentences[evidSentIdx]:(sentences[1]||'(no evidence sentence found)');
+  const evidSent=evidSentIdx>-1?sentences[evidSentIdx]:(sentences[1]||sentences[0]||'');
+  const analysisSent=sentences[Math.min(evidSentIdx>-1?evidSentIdx+1:2,sentences.length-1)]||sentences[1]||'';
 
-  // analysis sentence = sentence after evidence, or second-to-last
-  const analysisSentIdx=evidSentIdx>-1?evidSentIdx+1:Math.floor(sentences.length/2);
-  const analysisSent=sentences[analysisSentIdx]||sentences[1]||'(no analysis sentence found)';
+  const trunc=(s,n=90)=>s.length>n?s.slice(0,n).replace(/\s\S+$/,'…'):s;
 
-  const pFeedback=[];
-  const eFeedback=[];
-  const aFeedback=[];
-  const lFeedback=[];
+  const pFeedback=[],eFeedback=[],aFeedback=[],lFeedback=[];
 
-  // POINT FEEDBACK
+  // POINT
   if(!hasPointVerbFirst){
-    const improvedFirst=`${authorStr.charAt(0).toUpperCase()+authorStr.slice(1)} <strong>powerfully explores</strong> the concept of ${topic}${ctx.workTitle?` ${workStr}`:', highlighting its significance throughout the text'}.`;
+    const bestKeyword=keywords[0]||'this theme';
     pFeedback.push({
-      msg:`Your opening sentence doesn't start with a strong argumentative verb like <strong>presents, conveys, highlights, explores</strong>.`,
-      bad:truncSent(firstSent),
-      good:improvedFirst
+      msg:`Your opening sentence needs a strong argumentative verb like <strong>conveys, highlights, explores, presents</strong>.`,
+      bad:trunc(firstSent),
+      good:`${authorStr.charAt(0).toUpperCase()+authorStr.slice(1)} <strong>powerfully explores</strong> the theme of <em>${bestKeyword}</em> throughout the ${textType}.`,
+      quotes:[]
     });
   }
   if(!hasStance){
     pFeedback.push({
-      msg:`Add a <strong>stance adverb</strong> (clearly, significantly, powerfully, effectively) to show deliberate authorial intent.`,
-      bad:truncSent(firstSent),
-      good:firstSent.replace(/^(\w+)/,`$1 <strong>powerfully</strong>`)||`${authorStr} <strong>powerfully</strong> conveys the theme of ${topic}.`
-    });
-  }
-  if(firstSentLen<10){
-    pFeedback.push({
-      msg:`Your point is too short — aim for <strong>10–18 words</strong> naming the author, technique, and theme.`,
-      bad:truncSent(firstSent),
-      good:`${authorStr.charAt(0).toUpperCase()+authorStr.slice(1)} <strong>effectively conveys</strong> the theme of ${topic}, establishing it as a central concern of the text.`
+      msg:`Add a <strong>stance adverb</strong> (powerfully, effectively, clearly, significantly) to show deliberate authorial intent.`,
+      bad:trunc(firstSent),
+      good:firstSent.trim().replace(/^(\w+)/,`$1 <strong>powerfully</strong>`),
+      quotes:[]
     });
   }
 
-  // EVIDENCE FEEDBACK
+  // EVIDENCE — suggest actual quotes from source
   if(!hasQuote&&subject!=='science'&&subject!=='geography'){
-    pFeedback.length===0&&pFeedback.push(null);// padding guard
-    const evidGuess=sentences[1]||sentences[0]||'';
     eFeedback.push({
-      msg:`<strong>No direct quote found.</strong> Embed a short quote from your text in "quotation marks".`,
-      bad:truncSent(evidGuess),
-      good:`${evidGuess.replace(/[.!?]$/,'')||authorStr+' writes'}, <strong>"[exact words from the text here]"</strong>.`
+      msg:`<strong>No direct quote found.</strong> Embed a line or phrase from the ${textType} in quotation marks.`,
+      bad:trunc(evidSent||firstSent),
+      good:suggestedQuotes.length
+        ?`As ${authorStr} writes, <strong>"${trunc(suggestedQuotes[0],60)}"</strong>.`
+        :`As ${authorStr} writes, <strong>"[paste a line from the ${textType} here]"</strong>.`,
+      quotes:suggestedQuotes
+    });
+  }else if(hasQuote&&!quoteInSource&&sourceText){
+    eFeedback.push({
+      msg:`Your quote doesn't appear to be from the source text — make sure you're quoting directly from the ${textType}.`,
+      bad:`"${trunc(theirQuote||'',60)}"`,
+      good:suggestedQuotes.length?`Try quoting: <strong>"${trunc(suggestedQuotes[0],60)}"</strong>`:`Copy a line directly from the ${textType}.`,
+      quotes:suggestedQuotes
     });
   }
   if(!hasEvidIntro){
     eFeedback.push({
-      msg:`Introduce your evidence with a <strong>signal phrase</strong> (for example, as ${authorStr} writes, according to the source…).`,
-      bad:truncSent(evidSent),
-      good:`<strong>As ${authorStr} writes</strong>, "${ctx.quote||'[your quote here]'}".`
-    });
-  }
-  if(!hasStat&&(subject==='history'||subject==='science'||subject==='geography')){
-    eFeedback.push({
-      msg:`For ${subject}, strengthen your evidence with <strong>specific statistics, dates, or data</strong>.`,
-      bad:truncSent(evidSent),
-      good:evidSent.replace(/[.!?]$/,'')+`, <strong>with [statistic/date] showing [specific data]</strong>.`
+      msg:`Introduce your quote with a <strong>signal phrase</strong> (as ${authorStr} writes, in line X…).`,
+      bad:trunc(evidSent||firstSent),
+      good:`<strong>As ${authorStr} writes</strong>${suggestedQuotes.length?`, "${trunc(suggestedQuotes[0],50)}"`:`, "[quote from the ${textType}]"`}.`,
+      quotes:[]
     });
   }
 
-  // ANALYSIS FEEDBACK
-  const hasThisSuggests=/this (suggests?|implies?|shows?|demonstrates?|highlights?|conveys?|reflects?|reveals?|indicates?)/i.test(text);
-  const hasWordPhrase=/(the (word|phrase|verb|noun|adjective|metaphor|simile|imagery|repetition|use of))/i.test(text);
-  const hasReaderEffect=/(the (reader|audience|viewer) (is|are|made to|feels?|understands?|sees?))/i.test(text);
+  // ANALYSIS — use their quote or source keywords
+  const analysisTerm=theirQuote?`"${trunc(theirQuote,30)}"`:keywords[0]?`"${keywords[0]}"`:'"[key word]"';
+  const hasThisSuggests=/this (suggests?|implies?|shows?|demonstrates?|highlights?|conveys?|reflects?|reveals?|indicates?)/i.test(pealText);
+  const hasWordPhrase=/(the (word|phrase|verb|noun|adjective|metaphor|simile|imagery|repetition|use of))/i.test(pealText);
+  const hasReaderEffect=/(the (reader|audience|viewer) (is|are|made to|feels?|understands?|sees?))/i.test(pealText);
 
   if(!hasThisSuggests){
     aFeedback.push({
-      msg:`You're missing <strong>"this suggests / implies / highlights"</strong> — the most important analysis phrase.`,
-      bad:truncSent(analysisSent),
-      good:`<strong>This suggests</strong> that ${topic} is ${topic2}, emphasising how ${authorStr} uses it to shape the reader's understanding.`
+      msg:`Missing <strong>"this suggests / implies / highlights"</strong> — use it right after your quote.`,
+      bad:trunc(analysisSent||evidSent),
+      good:`<strong>This suggests</strong> that ${topic} is being used to convey a deeper sense of ${topic2}, shaping how the reader interprets the ${textType}.`,
+      quotes:[]
     });
   }
   if(!hasWordPhrase){
-    const qWord=ctx.quote?ctx.quote.split(/\s+/)[0]:topic;
+    const wordToAnalyse=theirQuote?theirQuote.split(/\s+/).find(w=>w.length>3&&!STOP.has(w.toLowerCase())):(keywords[0]||'[word]');
     aFeedback.push({
-      msg:`Zoom in on a <strong>specific word, phrase, or technique</strong> — name it and explain its connotations.`,
-      bad:truncSent(analysisSent),
-      good:`<strong>The word "${qWord}"</strong> connotes ${topic2}, which reinforces ${authorStr}'s message about ${topic}.`
+      msg:`Zoom into a <strong>specific word or technique</strong> — name it and explain its connotations.`,
+      bad:trunc(analysisSent||evidSent),
+      good:`<strong>The word "${wordToAnalyse}"</strong> connotes ${topic2}, reinforcing ${authorStr}'s exploration of ${topic}.`,
+      quotes:[]
     });
   }
   if(!hasReaderEffect){
     aFeedback.push({
-      msg:`Consider the <strong>effect on the reader or audience</strong> to show deeper understanding.`,
-      bad:truncSent(analysisSent),
-      good:`<strong>The reader is made to feel</strong> a sense of ${topic}, as the imagery creates an atmosphere of ${topic2}.`
+      msg:`Consider the <strong>effect on the reader</strong> to show a higher level of analysis.`,
+      bad:trunc(analysisSent||evidSent),
+      good:`<strong>The reader is made to feel</strong> a sense of ${topic}, as the imagery creates an atmosphere of ${topic2} throughout the ${textType}.`,
+      quotes:[]
     });
   }
 
-  // LINK FEEDBACK
+  // LINK
+  const lastHasLink=/(overall|therefore|ultimately|thus|in conclusion|in this way|this demonstrates)/i.test(lastSent);
   if(!lastHasLink){
     lFeedback.push({
-      msg:`Your paragraph doesn't end with a clear <strong>link back to the question or thesis</strong>.`,
-      bad:truncSent(lastSent),
-      good:`<strong>Overall, therefore,</strong> ${authorStr} demonstrates that ${topic} is central to the text's exploration of ${topic2}.`
+      msg:`Your paragraph needs a <strong>closing link sentence</strong> that connects back to the question.`,
+      bad:trunc(lastSent),
+      good:`<strong>Overall, therefore,</strong> ${authorStr} demonstrates that ${topic} is a central concern of the ${textType}, shaping its meaning throughout.`,
+      quotes:[]
     });
   }
-  if(!/(overall|in conclusion|ultimately|in this way)/i.test(text)){
+  if(!/(overall|in conclusion|ultimately|in this way)/i.test(pealText)){
     lFeedback.push({
-      msg:`Use a <strong>closing connective</strong> (Overall / Therefore / Ultimately / In this way) to signal your conclusion.`,
-      bad:truncSent(lastSent),
-      good:`<strong>Ultimately,</strong> this reveals how ${authorStr} uses ${topic} to argue that ${topic2} shapes meaning throughout the text.`
+      msg:`Use a clear <strong>closing connective</strong>: Overall / Therefore / Ultimately / In this way.`,
+      bad:trunc(lastSent),
+      good:`<strong>Ultimately,</strong> this reveals how ${authorStr} uses ${topic} to argue that ${topic2} is inseparable from the ${textType}'s message.`,
+      quotes:[]
     });
   }
 
   return{
     scores:{P,E,A,L,total},
-    feedback:{P:pFeedback.filter(Boolean),E:eFeedback,A:aFeedback,L:lFeedback},
-    wordCount,ctx
+    feedback:{P:pFeedback,E:eFeedback,A:aFeedback,L:lFeedback},
+    wordCount,srcInsights,authorStr,textType
   };
 }
 
-// ── GRADE / RANK ───────────────────────────────────────────────────────────
-function getGrade(score){
-  if(score>=92)return{letter:'S',rank:'PEAL Master',color:'#fbbf24',xpNext:100,xpBar:100};
-  if(score>=82)return{letter:'A',rank:'Expert Scholar',color:'#a855f7',xpNext:92,xpBar:Math.round((score-82)/10*100)};
-  if(score>=70)return{letter:'B',rank:'Advanced Writer',color:'#3b82f6',xpNext:82,xpBar:Math.round((score-70)/12*100)};
-  if(score>=57)return{letter:'C',rank:'Developing Writer',color:'#10b981',xpNext:70,xpBar:Math.round((score-57)/13*100)};
-  if(score>=42)return{letter:'D',rank:'Apprentice',color:'#f59e0b',xpNext:57,xpBar:Math.round((score-42)/15*100)};
-  return{letter:'F',rank:'Just Starting Out',color:'#ef4444',xpNext:42,xpBar:Math.round(score/42*100)};
+// ── GRADE ─────────────────────────────────────────────────────────────────
+function getGrade(s){
+  if(s>=92)return{letter:'S',rank:'PEAL Master',color:'#fbbf24',xpNext:100,xpBar:100};
+  if(s>=82)return{letter:'A',rank:'Expert Scholar',color:'#a855f7',xpNext:92,xpBar:Math.round((s-82)/10*100)};
+  if(s>=70)return{letter:'B',rank:'Advanced Writer',color:'#3b82f6',xpNext:82,xpBar:Math.round((s-70)/12*100)};
+  if(s>=57)return{letter:'C',rank:'Developing Writer',color:'#10b981',xpNext:70,xpBar:Math.round((s-57)/13*100)};
+  if(s>=42)return{letter:'D',rank:'Apprentice',color:'#f59e0b',xpNext:57,xpBar:Math.round((s-42)/15*100)};
+  return{letter:'F',rank:'Just Starting Out',color:'#ef4444',xpNext:42,xpBar:Math.round(s/42*100)};
 }
 
-// ── ACHIEVEMENTS ───────────────────────────────────────────────────────────
 function getAchievements(r){
-  const{P,E,A,L,total}=r.scores;const wc=r.wordCount;const achs=[];
-  if(P>=22)achs.push({icon:'🎯',name:'Sharp Point',desc:'Near-perfect opening claim'});
-  if(E>=20)achs.push({icon:'📌',name:'Evidence King',desc:'Strong, well-introduced evidence'});
-  if(A>=20)achs.push({icon:'🔍',name:'Deep Analyst',desc:'Excellent analytical language'});
-  if(L>=20)achs.push({icon:'🔗',name:'Linker',desc:'Clean, effective link back'});
-  if(total>=80)achs.push({icon:'⭐',name:'High Achiever',desc:'Scored 80+ overall'});
-  if(total>=92)achs.push({icon:'👑',name:'PEAL Master',desc:'Near-perfect paragraph!'});
-  if(wc>=120)achs.push({icon:'✍️',name:'Wordsmith',desc:'120+ word paragraph'});
-  if(P>=18&&E>=18&&A>=18&&L>=18)achs.push({icon:'🌟',name:'Balanced Scholar',desc:'All four components strong'});
-  return achs;
+  const{P,E,A,L,total}=r.scores;const wc=r.wordCount;const a=[];
+  if(P>=22)a.push({icon:'🎯',name:'Sharp Point',desc:'Near-perfect opening claim'});
+  if(E>=20)a.push({icon:'📌',name:'Evidence King',desc:'Strong, well-introduced evidence'});
+  if(A>=20)a.push({icon:'🔍',name:'Deep Analyst',desc:'Excellent analytical language'});
+  if(L>=20)a.push({icon:'🔗',name:'Linker',desc:'Clean, effective link back'});
+  if(total>=80)a.push({icon:'⭐',name:'High Achiever',desc:'Scored 80+ overall'});
+  if(total>=92)a.push({icon:'👑',name:'PEAL Master',desc:'Near-perfect paragraph!'});
+  if(wc>=120)a.push({icon:'✍️',name:'Wordsmith',desc:'120+ word paragraph'});
+  if(P>=18&&E>=18&&A>=18&&L>=18)a.push({icon:'🌟',name:'Balanced Scholar',desc:'All four components strong'});
+  return a;
 }
 
 const compMeta={
-  P:{label:'Point',full:'Main Argument',icon:'🎯',color:'var(--P)',hex:'#f59e0b'},
-  E:{label:'Evidence',full:'Quote / Data',icon:'📌',color:'var(--E)',hex:'#10b981'},
-  A:{label:'Analysis',full:'Explanation',icon:'🔍',color:'var(--A)',hex:'#3b82f6'},
-  L:{label:'Link',full:'Connect Back',icon:'🔗',color:'var(--L)',hex:'#ec4899'},
+  P:{label:'Point',full:'Main Argument',icon:'🎯',hex:'#f59e0b'},
+  E:{label:'Evidence',full:'Quote / Data',icon:'📌',hex:'#10b981'},
+  A:{label:'Analysis',full:'Explanation',icon:'🔍',hex:'#3b82f6'},
+  L:{label:'Link',full:'Connect Back',icon:'🔗',hex:'#ec4899'},
 };
-
-function statusLabel(score){
-  if(score>=18)return{cls:'status-good',txt:'Strong ✓'};
-  if(score>=10)return{cls:'status-ok',txt:'Needs Work'};
+function statusLabel(s){
+  if(s>=18)return{cls:'status-good',txt:'Strong ✓'};
+  if(s>=10)return{cls:'status-ok',txt:'Needs Work'};
   return{cls:'status-bad',txt:'Missing ✗'};
 }
 
-// ── RUN ANALYSIS ────────────────────────────────────────────────────────────
+// ── RUN ────────────────────────────────────────────────────────────────────
 function runAnalysis(){
-  const text=getText();
-  if(!text||text.split(/\s+/).filter(w=>w).length<15){
-    showToast('Please write or upload at least 15 words!');return;
+  const peal=document.getElementById('pealInput').value.trim();
+  if(!peal||peal.split(/\s+/).filter(w=>w).length<15){
+    showToast('Write at least 15 words in your PEAL paragraph!');return;
   }
   document.getElementById('loading').classList.add('show');
   document.getElementById('results').style.display='none';
@@ -670,7 +673,8 @@ function runAnalysis(){
   document.getElementById('analyzeBtn').disabled=true;
 
   setTimeout(()=>{
-    const result=analyzePEAL(text,currentSubject);
+    const srcInsights=extractSourceInsights(sourceText);
+    const result=analyzePEAL(peal,srcInsights,currentSubject);
     renderResults(result);
     document.getElementById('loading').classList.remove('show');
     document.getElementById('analyzeBtn').disabled=false;
@@ -679,22 +683,27 @@ function runAnalysis(){
 
 // ── RENDER ─────────────────────────────────────────────────────────────────
 function renderResults(result){
-  const{scores,feedback,wordCount}=result;
+  const{scores,feedback,srcInsights,authorStr,textType}=result;
   const{P,E,A,L,total}=scores;
   const grade=getGrade(total);
-  const rating=(total/10).toFixed(1);
+
+  // source badge
+  if(sourceText){
+    const badge=document.getElementById('sourceBadge');
+    const words=sourceText.split(/\s+/).length;
+    document.getElementById('sourceBadgeText').textContent=`Feedback based on your ${words}-word source ${textType}`;
+    badge.style.display='inline-flex';
+  }
 
   const gl=document.getElementById('gradeLetter');
   gl.textContent=grade.letter;
   gl.style.cssText=`background:linear-gradient(135deg,${grade.color},${grade.color}99);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 24px ${grade.color}66)`;
-
   const rl=document.getElementById('rankLabel');
   rl.textContent=grade.rank;
   rl.style.cssText=`background:${grade.color}22;color:${grade.color};border:1px solid ${grade.color}44`;
 
   animateCount('scoreDisplay',0,total,800);
-  animateCount('ratingDisplay',0,parseFloat(rating),800,1);
-
+  animateCount('ratingDisplay',0,total/10,800,1);
   document.getElementById('xpLabel').textContent=`XP — ${grade.rank}`;
   document.getElementById('xpNext').textContent=`Next rank at ${grade.xpNext}`;
   setTimeout(()=>{document.getElementById('xpFill').style.width=grade.xpBar+'%'},200);
@@ -702,9 +711,8 @@ function renderResults(result){
   const cc=document.getElementById('compCards');cc.innerHTML='';
   ['P','E','A','L'].forEach((k,i)=>{
     const m=compMeta[k];const sc=scores[k];const st=statusLabel(sc);
-    const div=document.createElement('div');
-    div.className='comp-card';div.style.animationDelay=i*.1+'s';
-    div.innerHTML=`
+    const d=document.createElement('div');d.className='comp-card';d.style.animationDelay=i*.1+'s';
+    d.innerHTML=`
       <div class="comp-header">
         <div class="comp-icon" style="background:${m.hex}22;color:${m.hex};border:1px solid ${m.hex}44">${m.icon}</div>
         <div><div class="comp-name" style="color:${m.hex}">${m.label}</div><div class="comp-full">${m.full}</div></div>
@@ -712,32 +720,30 @@ function renderResults(result){
       <div class="comp-score" style="color:${m.hex}"><span id="cs${k}">0</span><span>/25</span></div>
       <div class="comp-bar-track"><div class="comp-bar-fill" id="cb${k}" style="background:${m.hex}"></div></div>
       <div class="comp-status ${st.cls}">${st.txt}</div>`;
-    cc.appendChild(div);
-    setTimeout(()=>{
-      animateCount(`cs${k}`,0,sc,900);
-      document.getElementById(`cb${k}`).style.width=(sc/25*100)+'%';
-    },300+i*100);
+    cc.appendChild(d);
+    setTimeout(()=>{animateCount(`cs${k}`,0,sc,900);document.getElementById(`cb${k}`).style.width=(sc/25*100)+'%';},300+i*100);
   });
 
   const fa=document.getElementById('feedbackArea');fa.innerHTML='';
   ['P','E','A','L'].forEach(k=>{
     const m=compMeta[k];const fb=feedback[k];if(!fb.length)return;
     const sec=document.createElement('div');sec.className='card feedback-section';
-    sec.innerHTML=`<div class="feedback-title">
-      <div class="f-badge" style="background:${m.hex}22;color:${m.hex};border:1px solid ${m.hex}44">${m.icon}</div>
-      <h3>${m.label} — How to Improve</h3></div>`;
+    sec.innerHTML=`<div class="feedback-title"><div class="f-badge" style="background:${m.hex}22;color:${m.hex};border:1px solid ${m.hex}44">${m.icon}</div><h3>${m.label} — How to Improve</h3></div>`;
     fb.forEach(f=>{
-      const item=document.createElement('div');
-      item.className='feedback-item';
-      item.style.borderLeft=`3px solid ${m.hex}`;
-      item.innerHTML=`<p>${f.msg}</p>
-        <div class="example-box">
-          <div class="example-label">❌ Your current version</div>
-          <div class="example-bad">${escHtml(f.bad)}</div>
-          <div class="example-label">✅ Improved version</div>
-          <div class="example-good">${f.good}</div>
-        </div>`;
-      sec.appendChild(item);
+      const item=document.createElement('div');item.className='feedback-item';item.style.borderLeft=`3px solid ${m.hex}`;
+      let inner=`<p>${f.msg}</p><div class="example-box">
+        <div class="example-label">❌ Current version</div>
+        <div class="example-bad">${escHtml(f.bad)}</div>
+        <div class="example-label">✅ Improved version</div>
+        <div class="example-good">${f.good}</div>
+      </div>`;
+      // add quote suggestions from source
+      if(f.quotes&&f.quotes.length&&sourceText){
+        inner+=`<div class="quote-suggestions"><div class="qs-label">💡 Quotes from your source you could use</div>`;
+        f.quotes.forEach(q=>{inner+=`<span class="quote-chip">${escHtml(q)}</span>`;});
+        inner+=`</div>`;
+      }
+      item.innerHTML=inner;sec.appendChild(item);
     });
     fa.appendChild(sec);
   });
@@ -746,40 +752,34 @@ function renderResults(result){
   if(achs.length){
     const al=document.getElementById('achList');al.innerHTML='';
     achs.forEach((a,i)=>{
-      const div=document.createElement('div');div.className='ach';div.style.animationDelay=(i*.1+.5)+'s';
-      div.innerHTML=`<span class="ach-icon">${a.icon}</span><div class="ach-text"><strong>${a.name}</strong><span>${a.desc}</span></div>`;
-      al.appendChild(div);
+      const d=document.createElement('div');d.className='ach';d.style.animationDelay=(i*.1+.5)+'s';
+      d.innerHTML=`<span class="ach-icon">${a.icon}</span><div class="ach-text"><strong>${a.name}</strong><span>${a.desc}</span></div>`;
+      al.appendChild(d);
     });
     document.getElementById('achCard').style.display='block';
-  }else{
-    document.getElementById('achCard').style.display='none';
-  }
+  }else document.getElementById('achCard').style.display='none';
 
-  const res=document.getElementById('results');
-  res.style.display='block';
+  const res=document.getElementById('results');res.style.display='block';
   requestAnimationFrame(()=>res.classList.add('show'));
   if(total>=80)launchConfetti();
 }
 
-// ── UTILITIES ──────────────────────────────────────────────────────────────
-function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function animateCount(id,from,to,dur,decimals=0){
+// ── UTILS ──────────────────────────────────────────────────────────────────
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function animateCount(id,from,to,dur,dec=0){
   const el=document.getElementById(id);if(!el)return;
-  const start=performance.now();
-  (function frame(now){
-    const p=Math.min((now-start)/dur,1);
-    const v=from+(to-from)*(1-(1-p)*(1-p));
-    el.textContent=decimals?v.toFixed(decimals):Math.round(v);
-    if(p<1)requestAnimationFrame(frame);
+  const t0=performance.now();
+  (function f(now){
+    const p=Math.min((now-t0)/dur,1);const v=from+(to-from)*(1-(1-p)*(1-p));
+    el.textContent=dec?v.toFixed(dec):Math.round(v);if(p<1)requestAnimationFrame(f);
   })(performance.now());
 }
 function launchConfetti(){
-  const colors=['#f59e0b','#10b981','#3b82f6','#ec4899','#a855f7','#06b6d4'];
+  const cols=['#f59e0b','#10b981','#3b82f6','#ec4899','#a855f7','#06b6d4'];
   for(let i=0;i<60;i++){
     const el=document.createElement('div');el.className='confetti-piece';
-    el.style.cssText=`left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};width:${Math.random()*8+4}px;height:${Math.random()*8+4}px;animation-duration:${Math.random()*2+2}s;animation-delay:${Math.random()*.5}s;border-radius:${Math.random()>.5?'50%':'2px'}`;
-    document.body.appendChild(el);
-    setTimeout(()=>el.remove(),3500);
+    el.style.cssText=`left:${Math.random()*100}%;background:${cols[~~(Math.random()*cols.length)]};width:${Math.random()*8+4}px;height:${Math.random()*8+4}px;animation-duration:${Math.random()*2+2}s;animation-delay:${Math.random()*.5}s;border-radius:${Math.random()>.5?'50%':'2px'}`;
+    document.body.appendChild(el);setTimeout(()=>el.remove(),3500);
   }
 }
 function showToast(msg){
@@ -792,10 +792,10 @@ function resetAll(){
   document.getElementById('results').classList.remove('show');
   document.getElementById('results').style.display='none';
   document.getElementById('pealInput').value='';
-  uploadedText='';
-  document.getElementById('extractedPreview').classList.remove('show');
-  document.getElementById('ocrProgress').classList.remove('show');
-  document.getElementById('sharedWordCount').style.display='none';
+  document.getElementById('sourceInput').value='';
+  document.getElementById('sourceDisplay').classList.remove('show');
+  document.getElementById('sourceBadge').style.display='none';
+  sourceText='';pealUploaded='';
   document.getElementById('wordCount').textContent='0';
   document.getElementById('sentCount').textContent='0';
   window.scrollTo({top:0,behavior:'smooth'});
