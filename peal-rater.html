@@ -118,6 +118,8 @@ textarea::placeholder{color:var(--dim)}
 @keyframes scanline{to{left:170%}}
 
 .peal-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 12px;border-bottom:1px solid var(--b0)}
+.peal-upload{position:relative;border:1px dashed var(--b1);border-radius:5px;padding:4px 10px;cursor:pointer;transition:border-color .15s}
+.peal-upload:hover{border-color:var(--b2)}
 .peal-tag{font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--sub)}
 .peal-wc{font-size:.65rem;color:var(--dim);letter-spacing:.06em;font-variant-numeric:tabular-nums}
 .peal-input-wrap{padding:16px 20px 4px;position:relative;z-index:2}
@@ -324,7 +326,19 @@ textarea::placeholder{color:var(--dim)}
     <div class="peal-box" id="pealBox">
       <div class="peal-hdr">
         <span class="peal-tag">Paragraph Input</span>
-        <span class="peal-wc" id="wc">0 words</span>
+        <div style="display:flex;align-items:center;gap:14px">
+          <span class="peal-wc" id="wc">0 words</span>
+          <!-- peal upload -->
+          <div class="peal-upload" id="pealZone" title="Upload a .txt or image of your paragraph">
+            <input type="file" id="pealFile" accept=".txt,.text,image/*" onchange="handlePeal(this.files[0])" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%">
+            <span style="font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">↑ Upload</span>
+          </div>
+        </div>
+      </div>
+      <!-- peal ocr bar -->
+      <div class="ocr-w" id="pealOcr" style="margin:0 20px 4px">
+        <div class="ocr-lbl" id="pealOcrLbl">Reading image…</div>
+        <div class="ocr-tr"><div class="ocr-fl" id="pealOcrFl"></div></div>
       </div>
       <div class="peal-input-wrap">
         <textarea id="pealInput" placeholder="Write your PEAL paragraph here — start with your Point, include Evidence (with a direct quote), then Analysis, and close with a Link back to the question…"></textarea>
@@ -433,14 +447,15 @@ document.getElementById('sourceInput').addEventListener('input',function(){
 });
 
 // ── DRAG & DROP ────────────────────────────────────────────────────────────
-['srcZone'].forEach(id=>{
+[['srcZone',f=>handleSrc(f)],['pealZone',f=>handlePeal(f)]].forEach(([id,fn])=>{
   const el=document.getElementById(id);if(!el)return;
   el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('over')});
   el.addEventListener('dragleave',()=>el.classList.remove('over'));
-  el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('over');const f=e.dataTransfer.files[0];if(f)handleSrc(f);});
+  el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('over');const f=e.dataTransfer.files[0];if(f)fn(f);});
 });
 
 function handleSrc(f){if(!f)return;f.type.startsWith('image/')?ocr(f,'src'):readTxt(f,t=>{srcText=t;showSrcPrev(t);});}
+function handlePeal(f){if(!f)return;f.type.startsWith('image/')?ocr(f,'peal'):readTxt(f,t=>{document.getElementById('pealInput').value=t;const w=t.trim().split(/\s+/).filter(Boolean).length;document.getElementById('wc').textContent=`${w} word${w!==1?'s':''}`;});}
 function readTxt(f,cb){const r=new FileReader();r.onload=e=>cb(e.target.result.trim());r.readAsText(f);}
 
 function ocr(file,tgt){
@@ -766,7 +781,8 @@ function buildFeedback(sc, si){
     A.push({msg:`Missing <strong>"this suggests / implies / highlights"</strong> — the single most important phrase in A-level analysis.`,before:tr(anaSents[0]||evidSent),after:injectSuggests(anaSents[0]||evidSent)});
   if(!ZOOM.test(anaSrc)){
     const zoom=theirQuote?theirQuote.split(/\s+/).find(w=>w.length>3&&!STOP.has(w.toLowerCase()))||kw0:kw0;
-    A.push({msg:`Zoom into a <strong>specific word or technique</strong> — name it ("the verb X", "the metaphor X") and explain its connotations.`,before:tr(anaSents[0]||evidSent),(after=>`${tr(anaSents[0]||evidSent,60).replace(/[.!?]$/,'')}. <strong>The word "${zoom}"</strong> connotes ${kw1}, deepening the sense of ${kw0}.`)()});
+    const zoomAfter=`${tr(anaSents[0]||evidSent,60).replace(/[.!?]$/,'')}. <strong>The word "${zoom}"</strong> connotes ${kw1}, deepening the sense of ${kw0}.`;
+    A.push({msg:`Zoom into a <strong>specific word or technique</strong> — name it ("the verb X", "the metaphor X") and explain its connotations.`,before:tr(anaSents[0]||evidSent),after:zoomAfter});
   }
   if(!READER.test(anaSrc))
     A.push({msg:`Add a <strong>reader effect</strong> — how does this language position or affect the reader/audience?`,before:tr(anaSents[0]||evidSent),after:`${tr(anaSents[0]||evidSent,60).replace(/[.!?]$/,'')}. <strong>The reader is made to feel</strong> ${kw0}, drawing them deeper into ${authorStr}'s meaning.`});
