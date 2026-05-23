@@ -295,7 +295,10 @@ textarea::placeholder{color:var(--dim)}
         <span class="logo-wordmark-main">PEAL Master</span>
       </div>
     </div>
-    <div class="auth-nav-slot" id="authNav"></div>
+    <div class="auth-nav-slot" id="authNav">
+      <button class="btn-signin" onclick="window.clerk?.openSignIn()">Sign in</button>
+      <button class="btn-signin" style="background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 14px rgba(80,110,255,.3)" onclick="window.clerk?.openSignUp()">Sign up free</button>
+    </div>
   </div>
 
   <!-- HERO -->

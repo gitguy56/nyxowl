@@ -182,7 +182,10 @@ nav{animation:slideDown .5s .05s cubic-bezier(.25,.8,.25,1) both}
     <div class="nav-links">
       <a href="#how">How it works</a>
       <a href="#pricing">Pricing</a>
-      <div class="auth-nav-slot" id="authNav"></div>
+      <div class="auth-nav-slot" id="authNav">
+        <button class="btn-signin" onclick="window.clerk?.openSignIn()">Sign in</button>
+        <a href="peal-rater.html" class="nav-cta">Try free →</a>
+      </div>
     </div>
   </div>
 </nav>
