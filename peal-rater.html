@@ -296,8 +296,8 @@ textarea::placeholder{color:var(--dim)}
       </div>
     </div>
     <div class="auth-nav-slot" id="authNav">
-      <button class="btn-signin" onclick="window.clerk?.openSignIn()">Sign in</button>
-      <button class="btn-signin" style="background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 14px rgba(80,110,255,.3)" onclick="window.clerk?.openSignUp()">Sign up free</button>
+      <button class="btn-signin" onclick="openSignIn()">Sign in</button>
+      <button class="btn-signin" style="background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 14px rgba(80,110,255,.3)" onclick="openSignUp()">Sign up free</button>
     </div>
   </div>
 
@@ -417,7 +417,7 @@ textarea::placeholder{color:var(--dim)}
 </div>
 
 <!-- Clerk -->
-<script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js"></script>
 
 <script>
 // ── STARS ─────────────────────────────────────────────────────────────────
@@ -939,30 +939,14 @@ function resetAll(){
 }
 
 // ── CLERK AUTH ─────────────────────────────────────────────────────────────
-(async()=>{
-  window.clerk=new window.Clerk('pk_test_aW5mb3JtZWQtaHVza3ktNzYuY2xlcmsuYWNjb3VudHMuZGV2JA');
-  await window.clerk.load({
-    appearance:{
-      variables:{
-        colorPrimary:'#506eff',
-        colorBackground:'#07071a',
-        colorText:'#dde4f8',
-        colorTextSecondary:'#7a8ab8',
-        colorInputBackground:'rgba(80,110,255,0.05)',
-        colorInputText:'#dde4f8',
-        borderRadius:'8px',
-        fontFamily:"'Inter',system-ui,sans-serif",
-      },
-      elements:{
-        card:{border:'1px solid rgba(80,110,255,0.2)',boxShadow:'0 24px 80px rgba(0,0,0,0.6)',background:'#07071a'},
-        formButtonPrimary:{background:'#506eff',boxShadow:'0 0 22px rgba(80,110,255,0.3)'},
-        footerActionLink:{color:'#7090ff'},
-      }
-    }
-  });
-  updateAuthUI();
-  window.clerk.addListener(()=>updateAuthUI());
-})();
+window.addEventListener('load',async()=>{
+  try{
+    window.clerk=new window.Clerk('pk_test_aW5mb3JtZWQtaHVza3ktNzYuY2xlcmsuYWNjb3VudHMuZGV2JA');
+    await window.clerk.load();
+    updateAuthUI();
+    window.clerk.addListener(()=>updateAuthUI());
+  }catch(e){console.error('Clerk init failed:',e);}
+});
 
 function updateAuthUI(){
   const slot=document.getElementById('authNav');
@@ -982,10 +966,18 @@ function updateAuthUI(){
       </div>
     </div>`;
   }else{
-    slot.innerHTML=`<button class="btn-signin" onclick="clerk.openSignIn()">Sign in</button><button class="btn-signin" style="background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 14px rgba(80,110,255,.3)" onclick="clerk.openSignUp()">Sign up free</button>`;
+    slot.innerHTML=`<button class="btn-signin" onclick="openSignIn()">Sign in</button><button class="btn-signin" style="background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 14px rgba(80,110,255,.3)" onclick="openSignUp()">Sign up free</button>`;
   }
 }
 
+function openSignIn(){
+  if(window.clerk){window.clerk.openSignIn();}
+  else{alert('Still loading — please try again in a moment.');}
+}
+function openSignUp(){
+  if(window.clerk){window.clerk.openSignUp();}
+  else{alert('Still loading — please try again in a moment.');}
+}
 function toggleDropdown(){
   document.getElementById('userDropdown')?.classList.toggle('open');
 }

@@ -183,7 +183,7 @@ nav{animation:slideDown .5s .05s cubic-bezier(.25,.8,.25,1) both}
       <a href="#how">How it works</a>
       <a href="#pricing">Pricing</a>
       <div class="auth-nav-slot" id="authNav">
-        <button class="btn-signin" onclick="window.clerk?.openSignIn()">Sign in</button>
+        <button class="btn-signin" onclick="openSignIn()">Sign in</button>
         <a href="peal-rater.html" class="nav-cta">Try free →</a>
       </div>
     </div>
@@ -341,7 +341,7 @@ nav{animation:slideDown .5s .05s cubic-bezier(.25,.8,.25,1) both}
 </footer>
 
 <!-- Clerk -->
-<script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js"></script>
 
 <script>
 // ── STARS ─────────────────────────────────────────────────────────────────
@@ -384,30 +384,14 @@ nav{animation:slideDown .5s .05s cubic-bezier(.25,.8,.25,1) both}
 })();
 
 // ── CLERK AUTH ─────────────────────────────────────────────────────────────
-(async()=>{
-  window.clerk=new window.Clerk('pk_test_aW5mb3JtZWQtaHVza3ktNzYuY2xlcmsuYWNjb3VudHMuZGV2JA');
-  await window.clerk.load({
-    appearance:{
-      variables:{
-        colorPrimary:'#506eff',
-        colorBackground:'#07071a',
-        colorText:'#dde4f8',
-        colorTextSecondary:'#7a8ab8',
-        colorInputBackground:'rgba(80,110,255,0.05)',
-        colorInputText:'#dde4f8',
-        borderRadius:'8px',
-        fontFamily:"'Inter',system-ui,sans-serif",
-      },
-      elements:{
-        card:{border:'1px solid rgba(80,110,255,0.2)',boxShadow:'0 24px 80px rgba(0,0,0,0.6)',background:'#07071a'},
-        formButtonPrimary:{background:'#506eff',boxShadow:'0 0 22px rgba(80,110,255,0.3)'},
-        footerActionLink:{color:'#7090ff'},
-      }
-    }
-  });
-  updateAuthUI();
-  window.clerk.addListener(()=>updateAuthUI());
-})();
+window.addEventListener('load',async()=>{
+  try{
+    window.clerk=new window.Clerk('pk_test_aW5mb3JtZWQtaHVza3ktNzYuY2xlcmsuYWNjb3VudHMuZGV2JA');
+    await window.clerk.load();
+    updateAuthUI();
+    window.clerk.addListener(()=>updateAuthUI());
+  }catch(e){console.error('Clerk init failed:',e);}
+});
 
 function updateAuthUI(){
   const slot=document.getElementById('authNav');
@@ -441,9 +425,16 @@ document.addEventListener('click',e=>{
   if(wrap&&!wrap.contains(e.target))document.getElementById('userDropdown')?.classList.remove('open');
 });
 
+function openSignIn(){
+  if(window.clerk){window.clerk.openSignIn();}
+  else{alert('Still loading — please try again in a moment.');}
+}
+function openSignUp(){
+  if(window.clerk){window.clerk.openSignUp();}
+  else{alert('Still loading — please try again in a moment.');}
+}
 function handleUpgrade(){
-  if(!clerk?.user){clerk.openSignUp();return;}
-  // Stripe checkout — coming soon
+  if(!window.clerk?.user){openSignUp();return;}
   alert('Stripe coming soon!');
 }
 </script>
