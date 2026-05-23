@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEAL Master — Rate Your Paragraph. Improve Your Writing.</title>
+<meta name="description" content="Paste your PEAL paragraph and get instant, examiner-level feedback on your Point, Evidence, Analysis and Link. Used by students worldwide.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#03030d;--s1:#07071a;--s2:#0b0b22;
+  --b0:rgba(80,110,255,.07);--b1:rgba(80,110,255,.14);--b2:rgba(80,110,255,.28);
+  --text:#dde4f8;--sub:#7a8ab8;--dim:#3a4468;
+  --accent:#506eff;--accent2:#7090ff;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;font-size:16px;line-height:1.6}
+canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── LAYOUT ── */
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 28px}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid var(--b0);backdrop-filter:blur(12px);background:rgba(3,3,13,.7)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:60px;max-width:1100px;margin:0 auto;padding:0 28px}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.nav-logo-text{font-size:1rem;font-weight:800;letter-spacing:-.01em;color:var(--text)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:.82rem;color:var(--sub);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{padding:7px 18px;background:var(--accent);border-radius:6px;color:#fff !important;font-weight:600;font-size:.8rem;box-shadow:0 0 20px rgba(80,110,255,.3);transition:all .2s !important}
+.nav-cta:hover{background:var(--accent2) !important;box-shadow:0 0 30px rgba(80,110,255,.5) !important}
+
+/* ── HERO ── */
+.hero{padding:160px 0 100px;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--b1);border-radius:100px;padding:5px 14px;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:28px}
+.hero-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1;box-shadow:0 0 12px var(--accent)}}
+.hero h1{font-size:clamp(2.6rem,6vw,4.2rem);font-weight:900;letter-spacing:-.04em;line-height:1.05;color:var(--text);margin-bottom:20px}
+.hero h1 em{font-style:normal;color:var(--accent2)}
+.hero p{font-size:1.1rem;color:var(--sub);max-width:520px;margin:0 auto 36px;line-height:1.7}
+.hero-btns{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.btn-primary{padding:13px 30px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-size:.9rem;font-weight:700;font-family:inherit;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;box-shadow:0 0 30px rgba(80,110,255,.35);transition:all .2s;letter-spacing:.02em}
+.btn-primary:hover{background:var(--accent2);box-shadow:0 0 44px rgba(80,110,255,.5);transform:translateY(-2px)}
+.btn-ghost{padding:12px 26px;background:transparent;border:1px solid var(--b1);border-radius:8px;color:var(--sub);font-size:.88rem;font-weight:600;font-family:inherit;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s}
+.btn-ghost:hover{border-color:var(--b2);color:var(--text)}
+.hero-note{margin-top:16px;font-size:.75rem;color:var(--dim)}
+
+/* ── DEMO PREVIEW ── */
+.demo{padding:0 0 100px}
+.demo-window{border:1px solid var(--b1);border-radius:14px;overflow:hidden;max-width:780px;margin:0 auto;background:var(--s1)}
+.demo-bar{display:flex;align-items:center;gap:7px;padding:12px 16px;border-bottom:1px solid var(--b0);background:rgba(80,110,255,.03)}
+.demo-dot{width:10px;height:10px;border-radius:50%}
+.demo-url{flex:1;text-align:center;font-size:.7rem;color:var(--dim);letter-spacing:.04em}
+.demo-body{padding:28px}
+.demo-label{font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.demo-textarea{background:rgba(80,110,255,.04);border:1px solid var(--b0);border-radius:8px;padding:14px 16px;font-size:.82rem;line-height:1.75;color:var(--sub);font-family:inherit;margin-bottom:16px}
+.demo-scores{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b0);border-radius:8px;overflow:hidden}
+.demo-cell{background:var(--s2);padding:14px 12px}
+.demo-cell-ltr{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);margin-bottom:6px}
+.demo-cell-val{font-size:1.6rem;font-weight:800;color:var(--text);line-height:1}
+.demo-cell-of{font-size:.7rem;color:var(--sub)}
+.demo-cell-bar{height:1px;background:var(--b0);overflow:hidden;margin-top:8px}
+.demo-cell-fill{height:100%;background:var(--accent);border-radius:1px}
+
+/* ── HOW IT WORKS ── */
+.section{padding:80px 0}
+.section-label{font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);text-align:center;margin-bottom:12px}
+.section-title{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-.03em;text-align:center;color:var(--text);margin-bottom:14px}
+.section-sub{font-size:.95rem;color:var(--sub);text-align:center;max-width:480px;margin:0 auto 60px;line-height:1.7}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--b0);border:1px solid var(--b0);border-radius:12px;overflow:hidden}
+@media(max-width:640px){.steps{grid-template-columns:1fr}}
+.step{background:var(--s1);padding:32px 28px}
+.step-num{font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+.step h3{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-.01em}
+.step p{font-size:.85rem;color:var(--sub);line-height:1.65}
+
+/* ── PEAL BREAKDOWN ── */
+.peal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:800px;margin:0 auto}
+@media(max-width:640px){.peal-grid{grid-template-columns:1fr}}
+.peal-card{border:1px solid var(--b0);border-radius:10px;padding:24px;background:var(--s1)}
+.peal-card-letter{font-size:2rem;font-weight:900;color:var(--accent2);margin-bottom:6px;letter-spacing:-.03em}
+.peal-card h3{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:8px}
+.peal-card p{font-size:.82rem;color:var(--sub);line-height:1.65}
+.peal-card-tip{margin-top:12px;padding:10px 12px;background:rgba(80,110,255,.06);border-radius:6px;font-size:.75rem;color:var(--sub);border-left:2px solid var(--accent)}
+.peal-card-tip strong{color:var(--accent2)}
+
+/* ── PRICING ── */
+.pricing{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:720px;margin:0 auto}
+@media(max-width:600px){.pricing{grid-template-columns:1fr}}
+.price-card{border:1px solid var(--b0);border-radius:12px;padding:28px;background:var(--s1)}
+.price-card.featured{border-color:var(--accent);background:rgba(80,110,255,.06);position:relative;overflow:hidden}
+.price-card.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.price-badge{display:inline-block;background:var(--accent);color:#fff;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:16px}
+.price-name{font-size:.8rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:10px}
+.price-amount{font-size:2.6rem;font-weight:900;letter-spacing:-.04em;color:var(--text);line-height:1;margin-bottom:4px}
+.price-amount span{font-size:1rem;font-weight:400;color:var(--sub)}
+.price-period{font-size:.75rem;color:var(--dim);margin-bottom:24px}
+.price-features{list-style:none;margin-bottom:28px}
+.price-features li{font-size:.83rem;color:var(--sub);padding:7px 0;border-bottom:1px solid var(--b0);display:flex;align-items:center;gap:10px;line-height:1.4}
+.price-features li:last-child{border:none}
+.pf-yes{color:var(--accent2);font-size:.7rem;font-weight:700;flex-shrink:0}
+.pf-no{color:var(--dim);font-size:.7rem;font-weight:700;flex-shrink:0}
+.pf-text.muted{color:var(--dim)}
+.btn-full{display:block;width:100%;padding:12px;border-radius:8px;font-size:.85rem;font-weight:700;font-family:inherit;cursor:pointer;text-align:center;text-decoration:none;transition:all .2s;letter-spacing:.02em}
+.btn-full.primary{background:var(--accent);border:none;color:#fff;box-shadow:0 0 24px rgba(80,110,255,.3)}
+.btn-full.primary:hover{background:var(--accent2);box-shadow:0 0 36px rgba(80,110,255,.5)}
+.btn-full.ghost{background:transparent;border:1px solid var(--b1);color:var(--sub)}
+.btn-full.ghost:hover{border-color:var(--b2);color:var(--text)}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--b0);padding:40px 0}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-logo{font-size:.85rem;font-weight:700;color:var(--sub)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:.75rem;color:var(--dim);text-decoration:none;transition:color .15s}
+.footer-links a:hover{color:var(--sub)}
+
+/* ── DIVIDER ── */
+.hr{display:flex;align-items:center;gap:16px;margin:0 0 80px;color:var(--dim)}
+.hr::before,.hr::after{content:'';flex:1;height:1px;background:var(--b0)}
+.hr-dot{width:4px;height:4px;border-radius:50%;background:var(--dim)}
+
+@media(max-width:680px){
+  .nav-links{gap:16px}
+  .hero{padding:120px 0 80px}
+  .peal-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<canvas id="cvs"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <svg width="28" height="28" viewBox="0 0 46 46" fill="none">
+        <circle cx="23" cy="23" r="21" stroke="rgba(80,110,255,0.35)" stroke-width="1"/>
+        <ellipse cx="23" cy="23" rx="13" ry="5.5" stroke="rgba(80,110,255,0.25)" stroke-width="0.8" transform="rotate(-35 23 23)"/>
+        <circle cx="23" cy="23" r="3.5" fill="#506eff" opacity="0.9"/>
+        <circle cx="23" cy="23" r="6" fill="rgba(80,110,255,0.15)"/>
+        <circle cx="23" cy="2.5" r="1.2" fill="#506eff" opacity="0.7"/>
+        <circle cx="43.5" cy="23" r="1.2" fill="#506eff" opacity="0.5"/>
+        <circle cx="23" cy="43.5" r="1.2" fill="#506eff" opacity="0.4"/>
+        <circle cx="2.5" cy="23" r="1.2" fill="#506eff" opacity="0.5"/>
+        <line x1="23" y1="1" x2="23" y2="4.5" stroke="rgba(80,110,255,0.5)" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="45" y1="23" x2="41.5" y2="23" stroke="rgba(80,110,255,0.4)" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+      <span class="nav-logo-text">PEAL Master</span>
+    </a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="peal-rater.html" class="nav-cta">Try free →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-badge"><div class="hero-badge-dot"></div>Free to start · No account needed</div>
+    <h1>Rate your paragraph.<br>Master your <em>writing.</em></h1>
+    <p>Paste your PEAL paragraph and get instant, examiner-level feedback on every sentence — Point, Evidence, Analysis and Link.</p>
+    <div class="hero-btns">
+      <a href="peal-rater.html" class="btn-primary">Analyze my paragraph →</a>
+      <a href="#how" class="btn-ghost">See how it works</a>
+    </div>
+    <div class="hero-note">No sign up required to try · Used by students across the UK</div>
+  </div>
+
+  <!-- DEMO WINDOW -->
+  <div class="demo">
+    <div class="demo-window">
+      <div class="demo-bar">
+        <div class="demo-dot" style="background:#ff5f57"></div>
+        <div class="demo-dot" style="background:#febc2e"></div>
+        <div class="demo-dot" style="background:#28c840"></div>
+        <div class="demo-url">pealmaster.com/app</div>
+      </div>
+      <div class="demo-body">
+        <div class="demo-label">Your paragraph</div>
+        <div class="demo-textarea">Shakespeare powerfully conveys the theme of ambition in Macbeth, establishing it as a destructive force from the outset. As Shakespeare writes, Macbeth is told to "look like the innocent flower, but be the serpent under't." This suggests that ambition corrupts moral integrity — the word "serpent" connotes deception and evil, implying that power-seeking transforms Macbeth into something sinister. The reader is made to feel unease, as the natural image of the flower is undermined by hidden danger. Overall, therefore, Shakespeare demonstrates that unchecked ambition inevitably leads to moral destruction, a central concern throughout the play.</div>
+        <div class="demo-scores">
+          <div class="demo-cell"><div class="demo-cell-ltr">Point</div><div class="demo-cell-val">23<span class="demo-cell-of">/25</span></div><div class="demo-cell-bar"><div class="demo-cell-fill" style="width:92%"></div></div></div>
+          <div class="demo-cell"><div class="demo-cell-ltr">Evidence</div><div class="demo-cell-val">24<span class="demo-cell-of">/25</span></div><div class="demo-cell-bar"><div class="demo-cell-fill" style="width:96%"></div></div></div>
+          <div class="demo-cell"><div class="demo-cell-ltr">Analysis</div><div class="demo-cell-val">22<span class="demo-cell-of">/25</span></div><div class="demo-cell-bar"><div class="demo-cell-fill" style="width:88%"></div></div></div>
+          <div class="demo-cell"><div class="demo-cell-ltr">Link</div><div class="demo-cell-val">20<span class="demo-cell-of">/25</span></div><div class="demo-cell-bar"><div class="demo-cell-fill" style="width:80%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section" id="how">
+    <div class="section-label">How it works</div>
+    <div class="section-title">Three steps to better writing</div>
+    <div class="section-sub">No guesswork. Get feedback as specific as a real examiner — based on your actual words.</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">Step 01</div>
+        <h3>Upload your source text</h3>
+        <p>Paste the poem, passage or extract you're writing about. Or upload a photo of the page. PEAL Master reads it and bases all advice on that actual text.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 02</div>
+        <h3>Submit your paragraph</h3>
+        <p>Type or paste your PEAL paragraph. Upload a photo of handwritten work if you prefer. The tool identifies your Point, Evidence, Analysis and Link automatically.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 03</div>
+        <h3>Get line-by-line feedback</h3>
+        <p>Every weak sentence is shown alongside an improved version — built from your own words, not generic examples. See exactly what to change and why.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr"><div class="hr-dot"></div></div>
+
+  <!-- PEAL BREAKDOWN -->
+  <div style="margin-bottom:80px">
+    <div class="section-label">What we score</div>
+    <div class="section-title">Every part of PEAL, assessed</div>
+    <div class="section-sub" style="margin-bottom:40px">Scoring mirrors real AQA, Edexcel and OCR mark schemes — the same criteria your teacher uses.</div>
+    <div class="peal-grid">
+      <div class="peal-card">
+        <div class="peal-card-letter">P</div>
+        <h3>Point</h3>
+        <p>Your opening claim. Scored on whether it names the author, uses a strong technique verb, includes a stance adverb, and identifies a theme — not just describes the text.</p>
+        <div class="peal-card-tip"><strong>Example verb:</strong> Shakespeare <em>powerfully conveys</em> the theme of ambition…</div>
+      </div>
+      <div class="peal-card">
+        <div class="peal-card-letter">E</div>
+        <h3>Evidence</h3>
+        <p>Your quote or data. Scored on whether it's embedded naturally, introduced with a signal phrase, and verified against your source text — not just dropped in standalone.</p>
+        <div class="peal-card-tip"><strong>Example:</strong> As Shakespeare writes, <em>"look like the innocent flower."</em></div>
+      </div>
+      <div class="peal-card">
+        <div class="peal-card-letter">A</div>
+        <h3>Analysis</h3>
+        <p>The most important part. Scored across seven criteria including "this suggests", technique zoom, connotation, reader effect, and whether you use tentative hedging language.</p>
+        <div class="peal-card-tip"><strong>Key phrase:</strong> <em>This suggests</em> that the word "serpent" connotes…</div>
+      </div>
+      <div class="peal-card">
+        <div class="peal-card-letter">L</div>
+        <h3>Link</h3>
+        <p>Your closing sentence. Scored on whether it uses a closing connective in final position, connects back to the argument, and references the author's wider purpose.</p>
+        <div class="peal-card-tip"><strong>Example:</strong> <em>Overall, therefore,</em> Shakespeare demonstrates that…</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr"><div class="hr-dot"></div></div>
+
+  <!-- PRICING -->
+  <div class="section" id="pricing">
+    <div class="section-label">Pricing</div>
+    <div class="section-title">Start free. Upgrade when ready.</div>
+    <div class="section-sub">No credit card needed to try. Premium unlocks unlimited analyses, saved history, and the full feedback engine.</div>
+    <div class="pricing">
+      <div class="price-card">
+        <div class="price-name">Free</div>
+        <div class="price-amount">£0<span>/mo</span></div>
+        <div class="price-period">Forever free</div>
+        <ul class="price-features">
+          <li><span class="pf-yes">✓</span><span class="pf-text">3 analyses per day</span></li>
+          <li><span class="pf-yes">✓</span><span class="pf-text">Point, Evidence, Analysis, Link scoring</span></li>
+          <li><span class="pf-yes">✓</span><span class="pf-text">Before / after improvement examples</span></li>
+          <li><span class="pf-yes">✓</span><span class="pf-text">Upload source text</span></li>
+          <li><span class="pf-no">—</span><span class="pf-text muted">Image / photo upload (OCR)</span></li>
+          <li><span class="pf-no">—</span><span class="pf-text muted">Saved analysis history</span></li>
+          <li><span class="pf-no">—</span><span class="pf-text muted">Progress tracking over time</span></li>
+        </ul>
+        <a href="peal-rater.html" class="btn-full ghost">Start for free</a>
+      </div>
+      <div class="price-card featured">
+        <div class="price-badge">Most popular</div>
+        <div class="price-name">Premium</div>
+        <div class="price-amount">£4<span>/mo</span></div>
+        <div class="price-period">Cancel anytime</div>
+        <ul class="price-features">
+          <li><span class="pf-yes">✓</span><span class="pf-text">Unlimited analyses</span></li>
+          <li><span class="pf-yes">✓</span><span class="pf-text">Full examiner-level scoring</span></li>
+          <li><span class="pf-yes">✓</span><span class="pf-text">Before / after improvement examples</span></li>
+          <li><span class="pf-yes">✓</span><span class="pf-text">Upload source text</span></li>
+          <li><span class="pf-yes">✓</span><span class="pf-text">Image / photo upload (OCR)</span></li>
+          <li><span class="pf-yes">✓</span><span class="pf-text">Saved analysis history</span></li>
+          <li><span class="pf-yes">✓</span><span class="pf-text">Progress tracking over time</span></li>
+        </ul>
+        <a href="peal-rater.html" class="btn-full primary">Get Premium →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-logo">PEAL Master</div>
+      <div class="footer-links">
+        <a href="peal-rater.html">Tool</a>
+        <a href="#pricing">Pricing</a>
+        <a href="mailto:hello@pealmaster.com">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(()=>{
+  const c=document.getElementById('cvs'),ctx=c.getContext('2d');let stars=[];
+  const init=()=>{
+    c.width=innerWidth;c.height=innerHeight;
+    const n=Math.floor(c.width*c.height/5500);
+    stars=Array.from({length:n},()=>({
+      x:Math.random()*c.width,y:Math.random()*c.height,
+      r:Math.random()*.85+.15,a:Math.random(),
+      da:(Math.random()*.0012+.0003)*(Math.random()>.5?1:-1),
+      bright:Math.random()>.93
+    }));
+  };
+  const draw=()=>{
+    ctx.clearRect(0,0,c.width,c.height);
+    for(const s of stars){
+      s.a+=s.da;if(s.a>1||s.a<.05)s.da*=-1;
+      if(s.bright&&s.a>.65){
+        ctx.save();ctx.globalAlpha=s.a*.12;ctx.strokeStyle='rgba(140,170,255,1)';ctx.lineWidth=.6;
+        ctx.beginPath();ctx.moveTo(s.x-5,s.y);ctx.lineTo(s.x+5,s.y);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(s.x,s.y-5);ctx.lineTo(s.x,s.y+5);ctx.stroke();
+        ctx.restore();
+      }
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(150,180,255,${s.a*(s.bright?.7:.45)})`;ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  };
+  init();draw();window.addEventListener('resize',init);
+})();
+</script>
+</body>
+</html>
