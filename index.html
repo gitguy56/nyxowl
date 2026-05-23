@@ -384,10 +384,9 @@ nav{animation:slideDown .5s .05s cubic-bezier(.25,.8,.25,1) both}
 })();
 
 // ── CLERK AUTH ─────────────────────────────────────────────────────────────
-let clerk;
 (async()=>{
-  clerk=new window.Clerk('pk_test_aW5mb3JtZWQtaHVza3ktNzYuY2xlcmsuYWNjb3VudHMuZGV2JA');
-  await clerk.load({
+  window.clerk=new window.Clerk('pk_test_aW5mb3JtZWQtaHVza3ktNzYuY2xlcmsuYWNjb3VudHMuZGV2JA');
+  await window.clerk.load({
     appearance:{
       variables:{
         colorPrimary:'#506eff',
@@ -407,17 +406,17 @@ let clerk;
     }
   });
   updateAuthUI();
-  clerk.addListener(()=>updateAuthUI());
+  window.clerk.addListener(()=>updateAuthUI());
 })();
 
 function updateAuthUI(){
   const slot=document.getElementById('authNav');
-  if(!slot||!clerk)return;
-  if(clerk.user){
+  if(!slot||!window.clerk)return;
+  if(window.clerk.user){
     const name=clerk.user.fullName||clerk.user.firstName||'User';
     const email=clerk.user.primaryEmailAddress?.emailAddress||'';
     const ini=name.trim().split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,2)||'?';
-    const isPremium=clerk.user.publicMetadata?.premium===true;
+    const isPremium=window.clerk.user.publicMetadata?.premium===true;
     slot.innerHTML=`<div class="user-wrap" id="userWrap">
       <div class="user-avatar" onclick="toggleDropdown()">${ini}</div>
       <div class="user-dropdown" id="userDropdown">
