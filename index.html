@@ -441,9 +441,10 @@ function handleUpgrade(){
     window.clerk?.openSignUp();
     return;
   }
-  window.open('https://payhip.com/b/agQ5W','_blank');
+  PayhipCheckout.open({link:'https://payhip.com/b/agQ5W'});
 }
 </script>
+<script src="https://payhip.com/embed-v2.js"></script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
