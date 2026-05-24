@@ -437,8 +437,11 @@ function openSignUp(){
   else{alert('Still loading — please try again in a moment.');}
 }
 function handleUpgrade(){
-  if(!window.clerk?.user){openSignUp();return;}
-  alert('Stripe coming soon!');
+  if(!window.clerk?.user){
+    window.clerk?.openSignUp();
+    return;
+  }
+  window.open('https://payhip.com/b/agQ5W','_blank');
 }
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
