@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEAL Master Premium</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#03030d;--s1:#07071a;--s2:#0b0b22;
+  --b0:rgba(80,110,255,.07);--b1:rgba(80,110,255,.14);--b2:rgba(80,110,255,.28);
+  --text:#dde4f8;--sub:#7a8ab8;--dim:#3a4468;
+  --accent:#506eff;--accent2:#7090ff;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;font-size:16px;line-height:1.6}
+canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+.page{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:80px 28px 80px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1;box-shadow:0 0 12px var(--accent)}}
+@keyframes shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+
+.back{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;color:var(--sub);text-decoration:none;margin-bottom:52px;transition:color .15s}
+.back:hover{color:var(--text)}
+
+.badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--b1);border-radius:100px;padding:5px 14px;font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:24px;animation:fadeUp .5s .05s both}
+.badge-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:pulse 2.4s ease-in-out infinite}
+
+h1{font-size:clamp(2.2rem,6vw,3.2rem);font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-bottom:16px;animation:fadeUp .55s .1s both}
+h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent));background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite}
+
+.sub{font-size:1rem;color:var(--sub);line-height:1.7;margin-bottom:40px;animation:fadeUp .55s .15s both}
+
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:16px;padding:32px;margin-bottom:24px;position:relative;overflow:hidden;animation:fadeUp .55s .2s both}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.card-glow{position:absolute;top:-60px;right:-60px;width:180px;height:180px;background:radial-gradient(circle,rgba(80,110,255,.12),transparent 70%);pointer-events:none}
+
+.price-row{display:flex;align-items:flex-end;gap:10px;margin-bottom:8px}
+.price{font-size:3.8rem;font-weight:900;letter-spacing:-.05em;line-height:1;color:var(--text)}
+.price-meta{padding-bottom:8px}
+.price-period{font-size:.85rem;color:var(--sub)}
+.price-note{font-size:.72rem;color:var(--dim);margin-bottom:28px}
+
+.features{list-style:none;margin-bottom:32px;display:flex;flex-direction:column;gap:2px}
+.feature{display:flex;align-items:flex-start;gap:14px;padding:11px 0;border-bottom:1px solid var(--b0)}
+.feature:last-child{border:none}
+.feature-icon{width:22px;height:22px;border-radius:50%;background:rgba(80,110,255,.12);border:1px solid rgba(80,110,255,.25);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--accent2);flex-shrink:0;margin-top:1px}
+.feature-text{font-size:.85rem;color:var(--sub);line-height:1.5}
+.feature-text strong{color:var(--text);font-weight:600;display:block;margin-bottom:1px}
+
+.btn-pay{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:15px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border:none;border-radius:10px;
+  color:#fff;font-size:.95rem;font-weight:800;font-family:inherit;
+  cursor:pointer;letter-spacing:.02em;
+  box-shadow:0 0 40px rgba(80,110,255,.4),0 4px 20px rgba(0,0,0,.4);
+  transition:all .2s;position:relative;overflow:hidden
+}
+.btn-pay::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--accent2),#9090ff);
+  opacity:0;transition:opacity .2s
+}
+.btn-pay:hover{transform:translateY(-2px);box-shadow:0 0 60px rgba(80,110,255,.55),0 6px 28px rgba(0,0,0,.4)}
+.btn-pay:hover::before{opacity:1}
+.btn-pay span{position:relative;z-index:1}
+.btn-pay-arrow{position:relative;z-index:1;transition:transform .2s}
+.btn-pay:hover .btn-pay-arrow{transform:translateX(4px)}
+
+.secure{display:flex;align-items:center;justify-content:center;gap:8px;font-size:.72rem;color:var(--dim);margin-top:14px}
+.secure-dot{width:3px;height:3px;border-radius:50%;background:var(--dim)}
+
+.compare{animation:fadeUp .55s .3s both}
+.compare-title{font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);text-align:center;margin-bottom:18px}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.compare-col{background:var(--s1);border:1px solid var(--b0);border-radius:10px;padding:18px}
+.compare-col.hi{border-color:var(--b1)}
+.compare-col-lbl{font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+.compare-col.hi .compare-col-lbl{color:var(--accent2)}
+.compare-item{font-size:.78rem;color:var(--sub);padding:5px 0;display:flex;align-items:center;gap:8px;line-height:1.4}
+.compare-item.yes{color:var(--sub)}
+.compare-item.no{color:var(--dim)}
+.ci-mark{font-size:.65rem;flex-shrink:0}
+.ci-mark.y{color:var(--accent2)}
+.ci-mark.n{color:var(--dim)}
+</style>
+</head>
+<body>
+<canvas id="cvs"></canvas>
+<div class="page">
+
+  <a href="/" class="back">← Back to PEAL Master</a>
+
+  <div class="badge"><div class="badge-dot"></div>Upgrade</div>
+  <h1>Unlock <em>Premium</em></h1>
+  <p class="sub">Get unlimited analyses, image uploads, and full examiner-level feedback — everything you need to master PEAL.</p>
+
+  <div class="card">
+    <div class="card-glow"></div>
+    <div class="price-row">
+      <div class="price">€4</div>
+      <div class="price-meta"><div class="price-period">/ month</div></div>
+    </div>
+    <div class="price-note">Cancel anytime · No commitment</div>
+
+    <ul class="features">
+      <li class="feature">
+        <div class="feature-icon">✦</div>
+        <div class="feature-text"><strong>Unlimited analyses</strong>Free plan is limited to 3 per day</div>
+      </li>
+      <li class="feature">
+        <div class="feature-icon">✦</div>
+        <div class="feature-text"><strong>Image & photo upload (OCR)</strong>Photograph handwritten work and upload it directly</div>
+      </li>
+      <li class="feature">
+        <div class="feature-icon">✦</div>
+        <div class="feature-text"><strong>Full examiner-level scoring</strong>All 7 analysis criteria unlocked</div>
+      </li>
+      <li class="feature">
+        <div class="feature-icon">✦</div>
+        <div class="feature-text"><strong>Saved analysis history</strong>Review your past paragraphs and track improvement</div>
+      </li>
+      <li class="feature">
+        <div class="feature-icon">✦</div>
+        <div class="feature-text"><strong>Progress tracking over time</strong>See your scores improve week by week</div>
+      </li>
+    </ul>
+
+    <button class="btn-pay" onclick="document.getElementById('payhipBtn').click()">
+      <span>Get Premium for €4/month</span>
+      <span class="btn-pay-arrow">→</span>
+    </button>
+    <div class="secure">
+      <span>Secure checkout</span>
+      <span class="secure-dot"></span>
+      <span>Cancel anytime</span>
+      <span class="secure-dot"></span>
+      <span>Instant access</span>
+    </div>
+  </div>
+
+  <div class="compare">
+    <div class="compare-title">Free vs Premium</div>
+    <div class="compare-grid">
+      <div class="compare-col">
+        <div class="compare-col-lbl">Free</div>
+        <div class="compare-item yes"><span class="ci-mark y">✓</span>3 analyses/day</div>
+        <div class="compare-item yes"><span class="ci-mark y">✓</span>PEAL scoring</div>
+        <div class="compare-item yes"><span class="ci-mark y">✓</span>Before/after feedback</div>
+        <div class="compare-item yes"><span class="ci-mark y">✓</span>Source text upload</div>
+        <div class="compare-item no"><span class="ci-mark n">—</span>Photo upload</div>
+        <div class="compare-item no"><span class="ci-mark n">—</span>History</div>
+        <div class="compare-item no"><span class="ci-mark n">—</span>Progress tracking</div>
+      </div>
+      <div class="compare-col hi">
+        <div class="compare-col-lbl">Premium</div>
+        <div class="compare-item yes"><span class="ci-mark y">✓</span>Unlimited</div>
+        <div class="compare-item yes"><span class="ci-mark y">✓</span>Full scoring</div>
+        <div class="compare-item yes"><span class="ci-mark y">✓</span>Before/after feedback</div>
+        <div class="compare-item yes"><span class="ci-mark y">✓</span>Source text upload</div>
+        <div class="compare-item yes"><span class="ci-mark y">✓</span>Photo upload</div>
+        <div class="compare-item yes"><span class="ci-mark y">✓</span>History</div>
+        <div class="compare-item yes"><span class="ci-mark y">✓</span>Progress tracking</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<a href="https://payhip.com/b/agQ5W" class="payhip-embed-button" id="payhipBtn" style="display:none"></a>
+<script src="https://payhip.com/embed.js"></script>
+<script defer src="/_vercel/insights/script.js"></script>
+
+<script>
+(()=>{
+  const c=document.getElementById('cvs'),ctx=c.getContext('2d');let stars=[];
+  const init=()=>{
+    c.width=innerWidth;c.height=innerHeight;
+    const n=Math.floor(c.width*c.height/5500);
+    stars=Array.from({length:n},()=>({
+      x:Math.random()*c.width,y:Math.random()*c.height,
+      r:Math.random()*.85+.15,a:Math.random(),
+      da:(Math.random()*.0012+.0003)*(Math.random()>.5?1:-1),
+      bright:Math.random()>.93
+    }));
+  };
+  const draw=()=>{
+    ctx.clearRect(0,0,c.width,c.height);
+    for(const s of stars){
+      s.a+=s.da;if(s.a>1||s.a<.05)s.da*=-1;
+      if(s.bright&&s.a>.65){
+        ctx.save();ctx.globalAlpha=s.a*.12;ctx.strokeStyle='rgba(140,170,255,1)';ctx.lineWidth=.6;
+        ctx.beginPath();ctx.moveTo(s.x-5,s.y);ctx.lineTo(s.x+5,s.y);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(s.x,s.y-5);ctx.lineTo(s.x,s.y+5);ctx.stroke();
+        ctx.restore();
+      }
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(150,180,255,${s.a*(s.bright?.7:.45)})`;ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  };
+  init();draw();window.addEventListener('resize',init);
+})();
+</script>
+</body>
+</html>

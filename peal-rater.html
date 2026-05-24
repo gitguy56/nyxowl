@@ -965,7 +965,7 @@ function updateAuthUI(){
         <div class="ud-name">${name}</div>
         <div class="ud-email">${email}</div>
         ${isPremium?'<div class="ud-premium">✦ Premium</div>':''}
-        ${!isPremium?`<button class="ud-item" style="color:var(--accent2)" onclick="document.getElementById('payhipBtn').click()">Upgrade to Premium →</button>`:''}
+        ${!isPremium?`<button class="ud-item" style="color:var(--accent2)" onclick="window.location.href='/upgrade'">Upgrade to Premium →</button>`:''}
         <button class="ud-item" onclick="window.clerk.signOut()">Sign out</button>
       </div>
     </div>`;

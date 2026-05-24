@@ -438,7 +438,7 @@ function openSignUp(){
 }
 function handleUpgrade(){
   if(!window.clerk?.user){window.clerk?.openSignUp();return;}
-  document.getElementById('payhipBtn').click();
+  window.location.href='/upgrade';
 }
 </script>
 <a href="https://payhip.com/b/agQ5W" class="payhip-embed-button" id="payhipBtn" style="display:none"></a>
