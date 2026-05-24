@@ -965,7 +965,7 @@ function updateAuthUI(){
         <div class="ud-name">${name}</div>
         <div class="ud-email">${email}</div>
         ${isPremium?'<div class="ud-premium">✦ Premium</div>':''}
-        ${!isPremium?`<button class="ud-item" style="color:var(--accent2)" onclick="PayhipCheckout.open({link:'https://payhip.com/b/agQ5W'})">Upgrade to Premium →</button>`:''}
+        ${!isPremium?`<button class="ud-item" style="color:var(--accent2)" onclick="document.getElementById('payhipBtn').click()">Upgrade to Premium →</button>`:''}
         <button class="ud-item" onclick="window.clerk.signOut()">Sign out</button>
       </div>
     </div>`;
@@ -991,7 +991,8 @@ document.addEventListener('click',e=>{
   if(wrap&&!wrap.contains(e.target))document.getElementById('userDropdown')?.classList.remove('open');
 });
 </script>
-<script src="https://payhip.com/embed-v2.js"></script>
+<a href="https://payhip.com/b/agQ5W" class="payhip-embed-button" id="payhipBtn" style="display:none"></a>
+<script src="https://payhip.com/embed.js"></script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

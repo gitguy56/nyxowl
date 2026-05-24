@@ -437,14 +437,12 @@ function openSignUp(){
   else{alert('Still loading — please try again in a moment.');}
 }
 function handleUpgrade(){
-  if(!window.clerk?.user){
-    window.clerk?.openSignUp();
-    return;
-  }
-  PayhipCheckout.open({link:'https://payhip.com/b/agQ5W'});
+  if(!window.clerk?.user){window.clerk?.openSignUp();return;}
+  document.getElementById('payhipBtn').click();
 }
 </script>
-<script src="https://payhip.com/embed-v2.js"></script>
+<a href="https://payhip.com/b/agQ5W" class="payhip-embed-button" id="payhipBtn" style="display:none"></a>
+<script src="https://payhip.com/embed.js"></script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
