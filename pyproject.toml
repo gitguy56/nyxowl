@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nyxowl"
+version = "0.1.0"
+description = "A small transformer language model with BPE tokenizer, trained from scratch"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+keywords = ["transformer", "language-model", "bpe", "pytorch", "nlp"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "torch>=2.1.0",
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+]
+
+[project.scripts]
+nyxowl-train = "nyxowl.scripts.train:main"
+nyxowl-generate = "nyxowl.scripts.generate:main"
+nyxowl-prep-data = "nyxowl.scripts.prep_data:main"
+nyxowl-synth-persona = "nyxowl.scripts.synth_persona:main"
+nyxowl-chat = "nyxowl.scripts.chat:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["nyxowl*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
